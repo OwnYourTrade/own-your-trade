@@ -1,0 +1,29 @@
+{
+  "name": "own-your-trade",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Own Your Trade — one connected product: a marketing hub plus live ordering & booking demos for takeaways, driving instructors, barbers, tutors and personal trainers.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@stripe/stripe-js": "4.4.0",
+    "@vercel/kv": "^3.0.0",
+    "next": "^14.2.35",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "stripe": "16.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.15",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "autoprefixer": "10.4.20",
+    "postcss": "8.4.41",
+    "tailwindcss": "3.4.10",
+    "typescript": "5.5.4"
+  }
+}

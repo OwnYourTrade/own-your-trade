@@ -1,0 +1,177 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Own Your Trade — single design system.
+   Palette:
+     brand green  #17593F   (logo, nav, primary buttons, accents)   -> token: stamp
+     gold / amber #C0872E   (money figures, £-saved, get-started CTA) -> token: ledger
+     cream paper  #F4F1E8   (warm off-white base background)          -> token: paper
+     ink charcoal #1E2A30   (dark charcoal-navy text & dark blocks)   -> token: ink
+   Fonts: Public Sans (headings + body) · Space Mono (wordmark, numbers, labels)
+   Token names kept from the previous build so components re-theme automatically.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+  --font-display: "Space Grotesk", "Public Sans", system-ui, sans-serif;
+  --font-body: "Public Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --c-ink: 30 42 48;          /* #1E2A30 charcoal-navy */
+  --c-ink-soft: 84 96 105;    /* #546069 */
+  --c-paper: 244 241 232;     /* #F4F1E8 warm cream */
+  --c-paper-dark: 233 228 214;/* #E9E4D6 */
+
+  /* brand green (token: stamp) */
+  --c-stamp: 23 89 63;        /* #17593F */
+  --c-stamp-dark: 16 63 44;   /* #103F2C */
+  --c-stamp-light: 44 133 96; /* #2C8560 */
+
+  /* gold / amber (token: ledger) */
+  --c-ledger: 192 135 46;     /* #C0872E */
+  --c-ledger-dark: 156 108 32;/* #9C6C20 */
+  --c-ledger-light: 217 167 72;/* #D9A748 */
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-ink font-body antialiased;
+}
+
+/* Tabular numerals wherever numbers matter */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* --- Layout helpers ------------------------------------------------------ */
+.container-x {
+  @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+}
+
+/* --- Wordmark / mono labels --------------------------------------------- */
+.wordmark {
+  @apply font-mono font-bold uppercase tracking-wordmark;
+}
+.mono-label {
+  @apply font-mono text-[11px] font-medium uppercase tracking-[0.18em];
+}
+.eyebrow {
+  @apply font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-stamp;
+}
+
+/* --- Rules / textures --------------------------------------------------- */
+.rule-dashed {
+  border-top: 1.5px dashed rgb(var(--c-ink) / 0.2);
+}
+.rule-stamp,
+.rule-gold {
+  height: 3px;
+  width: 56px;
+  @apply bg-stamp;
+}
+.paper-texture {
+  background-color: rgb(var(--c-paper));
+  background-image: linear-gradient(rgb(var(--c-ink) / 0.03) 1px, transparent 1px);
+  background-size: 100% 30px;
+}
+
+/* Bold full-bleed brand-green block (soft radial glow + faint radiating lines) */
+.brand-block {
+  background-color: rgb(var(--c-stamp));
+  background-image:
+    radial-gradient(130% 120% at 50% -10%, rgb(var(--c-stamp-light) / 0.5), transparent 55%),
+    repeating-linear-gradient(115deg, rgb(255 255 255 / 0.04) 0, rgb(255 255 255 / 0.04) 1px, transparent 1px, transparent 22px);
+}
+.diagonal-lines {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(255 255 255 / 0.05) 0,
+    rgb(255 255 255 / 0.05) 1px,
+    transparent 1px,
+    transparent 13px
+  );
+}
+
+/* --- Surfaces ----------------------------------------------------------- */
+.ticket {
+  @apply relative rounded-2xl bg-white shadow-ticket;
+  border: 1px solid rgb(var(--c-ink) / 0.08);
+}
+.card {
+  @apply overflow-hidden rounded-2xl bg-white shadow-card;
+}
+
+/* --- Badges ------------------------------------------------------------- */
+.stamp-badge {
+  @apply inline-flex items-center gap-1.5 font-mono text-[11px] font-bold uppercase tracking-[0.14em] text-stamp;
+  border: 1.5px solid rgb(var(--c-stamp) / 0.5);
+  border-radius: 9999px;
+  padding: 3px 10px;
+}
+.claim-badge {
+  @apply inline-flex items-center gap-1.5 rounded-full border border-ink/10 bg-white/70 px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-ink;
+}
+
+/* --- Hover lift for interactive cards ----------------------------------- */
+.hover-lift {
+  @apply transition-all duration-300 ease-out will-change-transform hover:-translate-y-1.5 hover:shadow-lift;
+}
+
+/* --- Buttons (fully-rounded pills) -------------------------------------- */
+.btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-sm font-semibold tracking-wide transition-all duration-200 ease-out hover:-translate-y-px disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0;
+}
+/* brand green — the workhorse primary */
+.btn-primary {
+  @apply btn bg-stamp text-paper shadow-soft hover:bg-stamp-dark hover:shadow-card;
+}
+/* gold / amber — reserved for money-action CTAs (get started, hero, upgrade) */
+.btn-gold,
+.btn-ledger {
+  @apply btn bg-ledger text-ink shadow-soft hover:bg-ledger-dark hover:text-paper hover:shadow-card;
+}
+.btn-dark {
+  @apply btn bg-ink text-paper shadow-soft hover:bg-ink/90;
+}
+.btn-outline {
+  @apply btn border border-ink/20 bg-transparent text-ink hover:border-stamp hover:text-stamp;
+}
+.btn-ghost {
+  @apply btn bg-paper-dark text-ink hover:bg-ink/10;
+}
+
+/* --- Nav link underline -------------------------------------------------- */
+.nav-link {
+  @apply relative py-1 text-sm font-medium tracking-wide transition-colors;
+}
+.nav-link::after {
+  content: "";
+  @apply absolute left-0 -bottom-0.5 h-[2px] w-0 bg-stamp transition-all duration-300;
+}
+.nav-link:hover::after,
+.nav-link[data-active="true"]::after {
+  @apply w-full;
+}
+
+/* Hide scrollbar for horizontal chip strips */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* --- Micro-interactions ------------------------------------------------- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fadeUp 0.6s ease both; }
+
+@keyframes dropdownIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-dropdown { animation: dropdownIn 0.16s ease-out both; transform-origin: top center; }
