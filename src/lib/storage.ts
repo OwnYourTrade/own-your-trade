@@ -1,20 +1,24 @@
 import fs from "fs";
 import path from "path";
+import { createClient, type VercelKV } from "@vercel/kv";
 
 // ---------------------------------------------------------------------------
-// Dual-mode storage. Each "collection" is a JSON array of records stored under
-// a key.
+// Dual-mode storage. Each "collection" is a JSON array of records under a key.
 //
-//  • On Vercel (read-only filesystem): use Vercel KV (serverless Redis) when
-//    KV_REST_API_URL / KV_REST_API_TOKEN are present.
-//  • Locally / anywhere without KV: fall back to the JSON files in ./data,
+//  • On Vercel (read-only filesystem): use serverless Redis (Vercel KV /
+//    Upstash) when its REST credentials are present. We accept either the
+//    KV_REST_API_* names or the UPSTASH_REDIS_REST_* names, so it works
+//    regardless of how the store is connected in the dashboard.
+//  • Locally / anywhere without those vars: fall back to JSON files in ./data,
 //    so the demo runs with zero setup during development.
 //
 // Every store (orders / bookings / leads / signups) goes through here, so the
 // KV migration is isolated to this one file.
 // ---------------------------------------------------------------------------
 
-const useKV = Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+const useKV = Boolean(KV_URL && KV_TOKEN);
 
 export const storageMode: "kv" | "file" = useKV ? "kv" : "file";
 
@@ -22,17 +26,15 @@ const DATA_DIR = path.join(process.cwd(), "data");
 const fileFor = (name: string) => path.join(DATA_DIR, `${name}.json`);
 const kvKey = (name: string) => `oyt:${name}`;
 
-// Lazily load the KV client only when it's actually configured, so file mode
-// never imports it and never needs the env vars.
-async function kvClient() {
-  const mod = await import("@vercel/kv");
-  return mod.kv;
+let client: VercelKV | null = null;
+function kv(): VercelKV {
+  if (!client) client = createClient({ url: KV_URL as string, token: KV_TOKEN as string });
+  return client;
 }
 
 export async function readList<T>(name: string): Promise<T[]> {
   if (useKV) {
-    const kv = await kvClient();
-    const v = await kv.get<T[]>(kvKey(name));
+    const v = await kv().get<T[]>(kvKey(name));
     return Array.isArray(v) ? v : [];
   }
   try {
@@ -44,8 +46,7 @@ export async function readList<T>(name: string): Promise<T[]> {
 
 export async function writeList<T>(name: string, rows: T[]): Promise<void> {
   if (useKV) {
-    const kv = await kvClient();
-    await kv.set(kvKey(name), rows);
+    await kv().set(kvKey(name), rows);
     return;
   }
   if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
