@@ -67,9 +67,16 @@ export default function VerticalPitch({ v }: { v: Vertical }) {
                 then look at what the owner sees.
               </p>
             </div>
-            <div className="flex flex-wrap gap-3">
-              <Link href={v.demoPath} className="btn-primary">Open full demo ↗</Link>
-              <Link href={v.dashboardPath} className="btn-outline">See {v.dashboardLabel} ↗</Link>
+            <div className="max-w-sm">
+              <div className="flex flex-wrap gap-3">
+                <Link href={v.demoPath} className="btn-primary">Open full demo ↗</Link>
+                <Link href={v.dashboardPath} className="btn-outline">See {v.dashboardLabel} ↗</Link>
+              </div>
+              <p className="mt-3 text-sm text-ink-soft">
+                This is the live dashboard the owner sees — every{" "}
+                {v.slug === "takeaway" ? "order" : "booking"} lands here in real time, so you run
+                your day without juggling apps.
+              </p>
             </div>
           </div>
 

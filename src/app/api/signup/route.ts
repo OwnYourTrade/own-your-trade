@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
 import { createSignup, updateSignup, listSignups } from "@/lib/signups";
-import { isStaff } from "@/lib/auth";
+import { isAdmin } from "@/lib/auth";
 import { site } from "@/config/site";
 import { getVertical } from "@/config/verticals";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Real customer signups — admin-only (separate from the demo dashboards).
 export async function GET() {
-  if (!isStaff()) {
+  if (!isAdmin()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   return NextResponse.json({ signups: await listSignups() });

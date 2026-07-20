@@ -2,8 +2,8 @@ import { readList, writeList } from "./storage";
 
 // ---------------------------------------------------------------------------
 // Get Started signup store (new paying customers). Persistence via lib/storage
-// (Vercel KV in production, JSON file locally). The private /signups dashboard
-// reads from here.
+// (Vercel KV in production, JSON file locally). The private /admin area reads
+// from here.
 // ---------------------------------------------------------------------------
 
 export type SignupPayment = {

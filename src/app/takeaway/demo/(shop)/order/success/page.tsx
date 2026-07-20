@@ -146,12 +146,16 @@ export default async function SuccessPage({
             </p>
           )}
 
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <p className="mx-auto mt-8 max-w-sm text-center text-sm text-ink-soft">
+            That order just landed on the kitchen&apos;s live dashboard in real time — see the
+            view the owner runs their service from.
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-3">
             <Link href="/takeaway/demo" className="btn-outline">
               Back to home
             </Link>
-            <Link href="/takeaway/demo/menu" className="btn-primary">
-              Order something else
+            <Link href="/takeaway/demo/dashboard" className="btn-primary">
+              See the kitchen dashboard →
             </Link>
           </div>
         </div>

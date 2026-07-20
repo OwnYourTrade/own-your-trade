@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { createLead, listLeads } from "@/lib/leads";
-import { isStaff } from "@/lib/auth";
+import { isAdmin } from "@/lib/auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Real enquiries — admin-only (separate from the demo dashboards' password).
 export async function GET() {
-  if (!isStaff()) {
+  if (!isAdmin()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   return NextResponse.json({ leads: await listLeads() });

@@ -3,7 +3,7 @@ import { readList, writeList } from "./storage";
 // ---------------------------------------------------------------------------
 // Lead store — "get started" / contact enquiries from the hub and vertical
 // pages. Persistence via lib/storage (Vercel KV in production, JSON locally).
-// The private /lead-tracker page reads from here.
+// The private /admin area reads from here.
 // ---------------------------------------------------------------------------
 
 export type Lead = {

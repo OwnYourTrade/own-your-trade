@@ -71,7 +71,7 @@ export const driving: BookingConfig = {
   ],
   staff: [
     { id: "sam", name: "Sam", role: "Manual & automatic" },
-    { id: "priya", name: "Priya", role: "Manual · nervous learners" },
+    { id: "priya", name: "Priya", role: "Patient with nervous learners" },
   ],
   staffLabel: "Instructor",
   days: 14,
@@ -102,7 +102,7 @@ export const barber: BookingConfig = {
     { id: "skin-fade", name: "Skin Fade", duration: 45, price: 20, desc: "Sharp fade, finished with a line-up.", popular: true },
     { id: "cut-beard", name: "Cut & Beard", duration: 60, price: 28, desc: "Full cut plus beard shape and hot towel." },
     { id: "trim", name: "Tidy-Up Trim", duration: 30, price: 14, desc: "Quick clean-up between cuts." },
-    { id: "kids", name: "Kids' Cut", duration: 30, price: 13, desc: "Under-12s." },
+    { id: "kids", name: "Kids' Cut", duration: 30, price: 13, desc: "For under-12s." },
   ],
   staff: [
     { id: "deniz", name: "Deniz", role: "Fades & beard work" },
