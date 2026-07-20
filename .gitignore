@@ -11,3 +11,6 @@ reference/
 _shots/
 _cand/
 _logo/
+
+.vercel
+.env*
