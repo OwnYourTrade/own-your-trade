@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { verticals } from "@/config/verticals";
 import { site } from "@/config/site";
 import TradeIcon from "./TradeIcon";
+import Honeypot from "./Honeypot";
 
 const cur = site.currency;
 
@@ -22,6 +23,7 @@ export default function SignupForm() {
     domain: "",
     website: "",
     notes: "",
+    company_url: "", // spam honeypot — humans leave this blank
   });
 
   // Pre-select trade/tier from the query (?trade=&tier=), and canceled notice.
@@ -67,6 +69,7 @@ export default function SignupForm() {
 
   return (
     <form onSubmit={submit} className="grid gap-8 lg:grid-cols-[1fr_360px]">
+      <Honeypot value={form.company_url} onChange={(v) => set("company_url", v)} />
       <div className="space-y-8">
         {canceled && (
           <div className="rounded-xl border border-ledger/40 bg-ledger/10 px-5 py-3 text-sm text-ink">

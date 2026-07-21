@@ -24,10 +24,6 @@ export default function OwnYourTradeFooter() {
                 <p className="mono-label text-paper/50">Email</p>
                 <a href={`mailto:${site.operator.email}`} className="mt-1 block font-display text-xl font-bold hover:text-stamp-light">{site.operator.email}</a>
               </div>
-              <div>
-                <p className="mono-label text-paper/50">Phone</p>
-                <a href={site.operator.phoneHref} className="mt-1 block font-display text-xl font-bold hover:text-stamp-light">{site.operator.phone}</a>
-              </div>
             </div>
           </div>
           <GetStartedForm source="footer" />
@@ -73,9 +69,18 @@ export default function OwnYourTradeFooter() {
       </div>
 
       <div className="border-t border-paper/10">
-        <div className="container-x flex flex-col items-center justify-between gap-2 py-5 text-xs text-paper/50 sm:flex-row">
-          <span>© Own Your Trade. Built for independent trades.</span>
-          <span className="font-mono">Demos are live and interactive — go on, place a test order.</span>
+        <div className="container-x flex flex-col gap-3 py-5 text-xs text-paper/50">
+          <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
+            <span>© Own Your Trade. Built for independent trades.</span>
+            <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+              <Link href="/privacy" className="hover:text-paper">Privacy Policy</Link>
+              <Link href="/terms" className="hover:text-paper">Terms &amp; Conditions</Link>
+              <Link href="/cookies" className="hover:text-paper">Cookie Policy</Link>
+            </nav>
+          </div>
+          <span className="text-center font-mono text-paper/40 sm:text-left">
+            Demos are live and interactive — go on, place a test order.
+          </span>
         </div>
       </div>
     </footer>

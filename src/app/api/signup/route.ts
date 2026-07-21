@@ -34,6 +34,12 @@ export async function POST(req: Request) {
 
   const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
 
+  // Spam honeypot: a hidden field only bots fill. If present, silently drop
+  // the submission (no signup, no Stripe session) and return a benign success.
+  if (str(body.company_url)) {
+    return NextResponse.json({ ok: true }, { status: 200 });
+  }
+
   const tradeSlug = str(body.trade);
   const tierId = str(body.tier);
   const business = str(body.business);

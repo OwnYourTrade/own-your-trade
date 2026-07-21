@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { verticals } from "@/config/verticals";
+import Honeypot from "./Honeypot";
 
 export default function GetStartedForm({
   source = "hub",
@@ -21,6 +22,7 @@ export default function GetStartedForm({
     phone: "",
     trade: defaultTrade,
     message: "",
+    company_url: "", // spam honeypot — humans leave this blank
   });
 
   const set = (k: keyof typeof form, v: string) => setForm((f) => ({ ...f, [k]: v }));
@@ -60,6 +62,7 @@ export default function GetStartedForm({
 
   return (
     <form onSubmit={submit} className="ticket p-6 sm:p-8">
+      <Honeypot value={form.company_url} onChange={(v) => set("company_url", v)} />
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label="Your name" value={form.name} onChange={(v) => set("name", v)} required />
         <Field label="Business name" value={form.business} onChange={(v) => set("business", v)} placeholder="Optional" />

@@ -175,3 +175,27 @@ body {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .animate-dropdown { animation: dropdownIn 0.16s ease-out both; transform-origin: top center; }
+
+/* --- Legal / policy prose ----------------------------------------------- */
+.prose-legal {
+  @apply text-[15px] leading-relaxed text-ink-soft;
+}
+.prose-legal > :first-child { margin-top: 0; }
+.prose-legal h2 {
+  @apply mt-10 mb-3 font-display text-2xl font-bold text-ink;
+}
+.prose-legal h3 {
+  @apply mt-7 mb-2 font-display text-lg font-bold text-ink;
+}
+.prose-legal p { @apply my-3.5; }
+.prose-legal ul { @apply my-3.5 list-disc space-y-1.5 pl-5; }
+.prose-legal ol { @apply my-3.5 list-decimal space-y-1.5 pl-5; }
+.prose-legal li { @apply pl-1; }
+.prose-legal a {
+  @apply font-medium text-stamp underline underline-offset-2 hover:text-stamp-dark;
+}
+.prose-legal strong { @apply font-semibold text-ink; }
+.prose-legal .placeholder {
+  @apply rounded bg-ledger/15 px-1.5 py-0.5 font-mono text-[13px] font-medium text-ledger-dark;
+}
+.prose-legal hr { @apply my-8 border-t border-ink/10; }

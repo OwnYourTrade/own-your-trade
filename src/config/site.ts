@@ -16,13 +16,12 @@ export const site = {
   claims: ["No commission, ever", "Live in under 2 weeks", "A proven, tested system"],
 
   // The operator behind it — kept honest and local. Edit to your details.
+  // Email-only contact for now (no phone number displayed anywhere on the site).
   operator: {
     name: "Own Your Trade",
     role: "Independent web developer for local trades",
     location: "UK",
-    email: "hello@ownyourtrade.co.uk",
-    phone: "0000 000 0000",
-    phoneHref: "tel:0000000000",
+    email: "ownyourtrade.co.uk@gmail.com",
   },
 
   // Marketplace / platform commission range we compare against (takeaways etc.).

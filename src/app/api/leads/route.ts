@@ -22,6 +22,13 @@ export async function POST(req: Request) {
   }
 
   const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+
+  // Spam honeypot: a hidden field only bots fill. If present, silently drop
+  // the submission and return a normal-looking success so bots don't retry.
+  if (str(body.company_url)) {
+    return NextResponse.json({ ok: true }, { status: 200 });
+  }
+
   const name = str(body.name);
   const email = str(body.email);
 
