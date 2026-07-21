@@ -44,12 +44,20 @@ export default function CookiesPage() {
       </ul>
       <p>Because these cookies are strictly necessary, they do not require consent under the rules.</p>
 
-      <h3>Non-essential cookies</h3>
+      <h3>Analytics</h3>
       <p>
-        Non-essential cookies — for example, analytics that help us understand how the site is used —
-        are only set <strong>with your consent</strong>. We do not currently load third-party
-        analytics or advertising cookies. If we introduce any in future, we will only do so after you
-        accept them via our cookie banner, and we will update this policy.
+        We use <strong>Vercel Web Analytics</strong> to understand how many people visit our site and
+        which pages are popular. It is privacy-friendly and <strong>cookieless</strong> — it does not
+        set cookies, does not track you across other websites, and does not collect information that
+        identifies you personally. It only produces aggregate visit and page-view counts.
+      </p>
+
+      <h3>Other non-essential cookies</h3>
+      <p>
+        Any other non-essential cookies — for example, advertising or cross-site tracking cookies —
+        are only set <strong>with your consent</strong>. We do not currently use any. If we introduce
+        any in future, we will only do so after you accept them via our cookie banner, and we will
+        update this policy.
       </p>
 
       <h3>Payment cookies</h3>

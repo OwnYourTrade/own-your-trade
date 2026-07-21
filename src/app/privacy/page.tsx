@@ -89,7 +89,7 @@ export default function PrivacyPage() {
       <ul>
         <li><strong>Stripe</strong> — processes card payments securely. Your payment details are handled by Stripe under their own privacy policy.</li>
         <li><strong>Resend</strong> — sends our transactional emails (such as your signup confirmation), using your name and email address.</li>
-        <li><strong>Vercel</strong> — hosts our website and stores form submissions on our behalf.</li>
+        <li><strong>Vercel</strong> — hosts our website and stores form submissions on our behalf, and provides privacy-friendly, cookieless website analytics (aggregate visit and page-view counts that do not identify you).</li>
       </ul>
       <p>
         Some of these providers may process data outside the UK or European Economic Area. Where
