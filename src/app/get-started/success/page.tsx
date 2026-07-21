@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HubShell from "@/components/shared/HubShell";
-import { getSignup, markPaidBySession, type Signup } from "@/lib/signups";
+import { getSignup, markPaidBySession, markNotified, type Signup } from "@/lib/signups";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
+import { sendSignupNotifications } from "@/lib/email";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = { title: "You're in", robots: { index: false } };
@@ -34,6 +35,17 @@ export default async function SignupSuccessPage({
   if (signup && signup.payment.status === "paid") paid = true;
 
   const tier = signup ? site.pricing.tiers.find((t) => t.id === signup!.tier) : undefined;
+
+  // Fire the transactional emails exactly once, only for a genuinely paid
+  // signup (never for demo/sample actions — those set payment.status = "demo").
+  // The notifiedAt flag makes a page refresh a no-op.
+  if (signup && signup.payment.status === "paid" && !signup.notifiedAt) {
+    const result = await sendSignupNotifications(signup, tier);
+    if (result.ok) {
+      await markNotified(signup.id);
+      signup = (await getSignup(signup.id)) ?? signup;
+    }
+  }
 
   return (
     <HubShell heroTone="light">

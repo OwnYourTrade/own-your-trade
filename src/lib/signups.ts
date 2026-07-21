@@ -27,6 +27,7 @@ export type Signup = {
   website?: string;
   notes?: string;
   payment: SignupPayment;
+  notifiedAt?: string; // set once the confirmation + owner-alert emails have been sent
 };
 
 const COLLECTION = "signups";
@@ -73,6 +74,19 @@ export async function markPaidBySession(sessionId: string): Promise<Signup | und
   const s = await getSignupBySession(sessionId);
   if (!s) return undefined;
   return updateSignup(s.id, { payment: { status: "paid" } });
+}
+
+/**
+ * Records that the signup's confirmation + owner-notification emails have been
+ * sent, so a page refresh never double-sends. Returns the updated row.
+ */
+export async function markNotified(id: string): Promise<Signup | undefined> {
+  const rows = await readAll();
+  const idx = rows.findIndex((s) => s.id === id);
+  if (idx === -1) return undefined;
+  rows[idx].notifiedAt = new Date().toISOString();
+  await writeAll(rows);
+  return rows[idx];
 }
 
 export async function listSignups(): Promise<Signup[]> {

@@ -14,3 +14,7 @@ _logo/
 
 .vercel
 .env*
+
+# ...but keep the committed example templates (no real secrets in them).
+!.env.example
+!.env.local.example
