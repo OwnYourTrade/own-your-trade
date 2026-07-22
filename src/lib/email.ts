@@ -133,6 +133,10 @@ function customerEmail(signup: Signup, tier: Tier | undefined): { subject: strin
     </p>
     <p style="font-size:15px;line-height:1.6;color:#3a403d;margin:16px 0 0;">
       Nothing you need to do right now — just keep an eye on your inbox.
+    </p>
+    <p style="font-size:13px;line-height:1.6;color:#6b716e;margin:14px 0 0;">
+      Your plan renews monthly and you can update your card or cancel any time — use the
+      &ldquo;Manage billing&rdquo; link on your confirmation page, or just reply to this email.
     </p>`;
   return { subject: `You're in — ${signup.business} on ${planName} ✓`, html: shell(inner) };
 }

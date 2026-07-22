@@ -23,3 +23,42 @@ export function getStripe(): Stripe | null {
   }
   return cached;
 }
+
+/**
+ * Create a Stripe Customer Billing Portal session for a customer — the
+ * self-serve place to update card details and cancel the subscription.
+ * A fresh (test) account has no default portal configuration, so on that
+ * specific failure we create a sensible one (invoices, card update, cancel
+ * at period end) and retry once.
+ */
+export async function createBillingPortalSession(
+  customerId: string,
+  returnUrl: string
+): Promise<{ url: string }> {
+  const stripe = getStripe();
+  if (!stripe) throw new Error("Stripe is not configured");
+  try {
+    const session = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: returnUrl,
+    });
+    return { url: session.url };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : "";
+    if (!/default configuration has not been created|No configuration provided/i.test(msg)) throw err;
+    await stripe.billingPortal.configurations.create({
+      business_profile: { headline: "Own Your Trade — manage your plan" },
+      features: {
+        invoice_history: { enabled: true },
+        payment_method_update: { enabled: true },
+        customer_update: { enabled: true, allowed_updates: ["email", "address"] },
+        subscription_cancel: { enabled: true, mode: "at_period_end" },
+      },
+    });
+    const session = await stripe.billingPortal.sessions.create({
+      customer: customerId,
+      return_url: returnUrl,
+    });
+    return { url: session.url };
+  }
+}

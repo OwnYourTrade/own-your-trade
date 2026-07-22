@@ -28,6 +28,16 @@ export type Signup = {
   notes?: string;
   payment: SignupPayment;
   notifiedAt?: string; // set once the confirmation + owner-alert emails have been sent
+
+  // --- Recurring billing (Stripe subscription) -----------------------------
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  /** Stripe subscription status: active | past_due | canceled | ... */
+  subscriptionStatus?: string;
+  /** True when the customer has cancelled but keeps access until period end. */
+  cancelAtPeriodEnd?: boolean;
+  /** ISO date the current paid period runs to (= next charge date while active). */
+  currentPeriodEnd?: string;
 };
 
 const COLLECTION = "signups";
@@ -59,15 +69,36 @@ export async function getSignupBySession(sessionId: string): Promise<Signup | un
 
 export async function updateSignup(
   id: string,
-  patch: { stripeSessionId?: string; payment?: Partial<SignupPayment> }
+  patch: {
+    stripeSessionId?: string;
+    payment?: Partial<SignupPayment>;
+    stripeCustomerId?: string;
+    stripeSubscriptionId?: string;
+    subscriptionStatus?: string;
+    cancelAtPeriodEnd?: boolean;
+    currentPeriodEnd?: string;
+  }
 ): Promise<Signup | undefined> {
   const rows = await readAll();
   const idx = rows.findIndex((s) => s.id === id);
   if (idx === -1) return undefined;
   if (patch.stripeSessionId) rows[idx].payment.stripeSessionId = patch.stripeSessionId;
   if (patch.payment) rows[idx].payment = { ...rows[idx].payment, ...patch.payment };
+  if (patch.stripeCustomerId !== undefined) rows[idx].stripeCustomerId = patch.stripeCustomerId;
+  if (patch.stripeSubscriptionId !== undefined) rows[idx].stripeSubscriptionId = patch.stripeSubscriptionId;
+  if (patch.subscriptionStatus !== undefined) rows[idx].subscriptionStatus = patch.subscriptionStatus;
+  if (patch.cancelAtPeriodEnd !== undefined) rows[idx].cancelAtPeriodEnd = patch.cancelAtPeriodEnd;
+  if (patch.currentPeriodEnd !== undefined) rows[idx].currentPeriodEnd = patch.currentPeriodEnd;
   await writeAll(rows);
   return rows[idx];
+}
+
+export async function getSignupBySubscription(subscriptionId: string): Promise<Signup | undefined> {
+  return (await readAll()).find((s) => s.stripeSubscriptionId === subscriptionId);
+}
+
+export async function getSignupByCustomer(customerId: string): Promise<Signup | undefined> {
+  return (await readAll()).find((s) => s.stripeCustomerId === customerId);
 }
 
 export async function markPaidBySession(sessionId: string): Promise<Signup | undefined> {
