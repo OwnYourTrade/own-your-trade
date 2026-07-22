@@ -32,11 +32,11 @@ export default function HeroPreviewInput() {
   return (
     <div className="mx-auto mt-10 max-w-2xl">
       <div className="relative">
-        {/* soft glow */}
-        <div className="pointer-events-none absolute -inset-4 rounded-full bg-stamp/15 blur-3xl" />
+        {/* crisp offset backing — a warm sand echo instead of a blur glow */}
+        <div className="pointer-events-none absolute inset-0 translate-y-2.5 rounded-full bg-sand-dark/60" />
         <form
           onSubmit={(e) => { e.preventDefault(); go(); }}
-          className="relative flex items-center gap-2 rounded-full border border-ink/10 bg-white p-2 pl-5 shadow-card transition focus-within:border-stamp/40"
+          className="relative flex items-center gap-2 rounded-full border border-sand-dark/70 bg-white p-2 pl-5 shadow-warm transition focus-within:border-stamp/50"
         >
           <svg className="hidden shrink-0 text-ink/35 sm:block" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" />

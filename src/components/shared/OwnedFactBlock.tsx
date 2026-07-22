@@ -1,4 +1,5 @@
 import { site } from "@/config/site";
+import Reveal from "./Reveal";
 
 const facts = [
   { icon: "grid", title: "5 trades, one system", body: "Takeaway, driving, barber, tutor and PT — the same proven engine." },
@@ -9,40 +10,75 @@ const facts = [
 ];
 
 /**
- * Full-bleed brand-green section (image-3 pattern): diagonal/radial texture,
- * centred white headline, honest claim pill-badges, and a row of pale FACT
- * cards populated with real product facts — no fabricated testimonials/reviews.
+ * Full-bleed brand-green section: centred white headline, honest claim
+ * pill-badges, and real product FACT cards — no fabricated testimonials or
+ * reviews. Crafted-warmth treatment: paper grain, doorway icon plates, and a
+ * varied card arrangement (one featured + solid/sand/outlined mix) instead of
+ * five identical tiles.
  */
 export default function OwnedFactBlock() {
+  const [featured, ...others] = facts;
+
   return (
-    <section className="relative overflow-hidden brand-block py-20 text-paper sm:py-28">
+    <section className="grain relative overflow-hidden brand-block py-20 text-paper sm:py-28">
       <div className="container-x relative text-center">
-        <h2 className="mx-auto max-w-3xl font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
-          Built to be owned, not rented.
-        </h2>
-        <p className="mx-auto mt-5 max-w-xl text-lg text-paper/80">
-          One proven system behind five trades — everything below is a real product fact, not a
-          review score we don&apos;t have yet.
-        </p>
+        <Reveal>
+          <h2 className="mx-auto max-w-3xl font-craft text-4xl font-semibold leading-[1.06] tracking-tight sm:text-5xl">
+            Built to be owned, not rented.
+          </h2>
+          <p className="mx-auto mt-5 max-w-xl text-lg text-paper/80">
+            One proven system behind five trades — everything below is a real product fact, not a
+            review score we don&apos;t have yet.
+          </p>
+        </Reveal>
 
-        <div className="mt-8 flex flex-wrap justify-center gap-2.5">
-          {site.claims.map((c) => (
-            <span key={c} className="inline-flex items-center gap-2 rounded-full bg-paper px-4 py-2 text-[13px] font-semibold text-ink shadow-soft">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-stamp"><path d="M20 6 9 17l-5-5" /></svg>
-              {c}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-14 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-5">
-          {facts.map((f) => (
-            <div key={f.title} className="rounded-2xl bg-paper p-5 shadow-card">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-stamp/10 text-stamp">
-                <FactIcon name={f.icon} />
+        <Reveal delay={100}>
+          <div className="mt-8 flex flex-wrap justify-center gap-2.5">
+            {site.claims.map((c) => (
+              <span key={c} className="inline-flex items-center gap-2 rounded-full bg-paper px-4 py-2 text-[13px] font-semibold text-ink shadow-soft">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-stamp"><path d="M20 6 9 17l-5-5" /></svg>
+                {c}
               </span>
-              <h3 className="mt-4 font-display text-base font-bold text-ink">{f.title}</h3>
-              <p className="mt-1.5 text-sm text-ink-soft">{f.body}</p>
+            ))}
+          </div>
+        </Reveal>
+
+        <div className="mt-14 grid gap-4 text-left sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2">
+          {/* Featured fact — tall doorway card */}
+          <Reveal variant="scale" className="sm:col-span-2 lg:row-span-2">
+            <div className="card-craft grain flex h-full flex-col rounded-2xl bg-paper p-7 shadow-warm-lg">
+              <span className="icon-plate arch-top grid h-16 w-[3.25rem] place-items-center bg-stamp text-paper">
+                <FactIcon name={featured.icon} size={24} />
+              </span>
+              <h3 className="mt-6 font-craft text-2xl font-semibold text-ink">{featured.title}</h3>
+              <p className="mt-2 text-ink-soft">{featured.body}</p>
+              <p className="mt-auto pt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-clay">
+                The same engine behind every demo
+              </p>
             </div>
+          </Reveal>
+
+          {/* The other four — alternating solid and outlined treatments */}
+          {others.map((f, i) => (
+            <Reveal key={f.title} variant="scale" delay={90 + i * 70}>
+              {i % 2 === 0 ? (
+                <div className="card-craft flex h-full flex-col rounded-2xl bg-paper p-5 shadow-warm">
+                  <span className="icon-plate arch-top grid h-11 w-9 place-items-center bg-stamp/10 text-stamp">
+                    <FactIcon name={f.icon} size={18} />
+                  </span>
+                  <h3 className="mt-4 font-display text-base font-bold text-ink">{f.title}</h3>
+                  <p className="mt-1.5 text-sm text-ink-soft">{f.body}</p>
+                </div>
+              ) : (
+                <div className="card-craft flex h-full flex-col rounded-2xl border-2 border-paper/30 p-5">
+                  <span className="icon-plate arch-top grid h-11 w-9 place-items-center bg-paper/15 text-paper">
+                    <FactIcon name={f.icon} size={18} />
+                  </span>
+                  <h3 className="mt-4 font-display text-base font-bold text-paper">{f.title}</h3>
+                  <p className="mt-1.5 text-sm text-paper/75">{f.body}</p>
+                </div>
+              )}
+            </Reveal>
           ))}
         </div>
       </div>
@@ -50,8 +86,8 @@ export default function OwnedFactBlock() {
   );
 }
 
-function FactIcon({ name }: { name: string }) {
-  const c = { width: 20, height: 20, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+function FactIcon({ name, size = 20 }: { name: string; size?: number }) {
+  const c = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.7, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
   if (name === "grid") return (<svg {...c}><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg>);
   if (name === "percent") return (<svg {...c}><path d="M19 5 5 19" /><circle cx="6.5" cy="6.5" r="2.5" /><circle cx="17.5" cy="17.5" r="2.5" /></svg>);
   if (name === "clock") return (<svg {...c}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>);

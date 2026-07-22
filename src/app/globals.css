@@ -33,6 +33,12 @@
   --c-ledger: 192 135 46;     /* #C0872E */
   --c-ledger-dark: 156 108 32;/* #9C6C20 */
   --c-ledger-light: 217 167 72;/* #D9A748 */
+
+  /* crafted-warmth additions (redesign experiment) */
+  --font-craft: "Fraunces", Georgia, serif;
+  --c-sand: 232 222 199;      /* #E8DEC7 warm sand */
+  --c-sand-dark: 219 205 175; /* #DBCDAF deeper sand */
+  --c-clay: 158 100 47;       /* #9E642F clay amber (readable on cream) */
 }
 
 html {
@@ -175,6 +181,120 @@ body {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .animate-dropdown { animation: dropdownIn 0.16s ease-out both; transform-origin: top center; }
+
+/* --- Crafted warmth (homepage redesign experiment) ----------------------- */
+
+/* Fine paper-grain overlay — an SVG turbulence texture, not a gradient blob. */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.28;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0.42 0 0 0 0 0.33 0 0 0 0 0.20 0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Doorway arch — the logo's "your own place" motif as a surface shape. */
+.arch-top {
+  border-radius: 999px 999px 24px 24px;
+}
+
+/* Scroll-reveal system. Hidden state only applies when scripting is enabled,
+   so content is never invisible without JS; reduced motion shows instantly. */
+@media (scripting: enabled) {
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(26px);
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  [data-reveal="scale"] {
+    transform: translateY(16px) scale(0.96);
+  }
+  [data-reveal="left"] {
+    transform: translateX(-28px);
+  }
+  [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* Amber underline that draws itself in once revealed. */
+.draw-underline {
+  position: relative;
+  white-space: nowrap;
+}
+.draw-underline::after {
+  content: "";
+  position: absolute;
+  left: 0.02em;
+  right: 0.02em;
+  bottom: 0.02em;
+  height: 0.09em;
+  border-radius: 999px;
+  background: rgb(var(--c-ledger));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 0.45s;
+}
+.is-revealed .draw-underline::after,
+.draw-underline.is-revealed::after {
+  transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .draw-underline::after {
+    transform: scaleX(1) !important;
+    transition: none !important;
+  }
+}
+
+/* Gentle levitation for the hero phone. */
+@keyframes floatSoft {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+.float-soft {
+  animation: floatSoft 7s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .float-soft { animation: none; }
+}
+
+/* Warm card hover — lift + warm shadow + a nudge for the icon plate inside. */
+.card-craft {
+  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.3s ease;
+}
+.card-craft:hover {
+  transform: translateY(-5px);
+}
+.card-craft .icon-plate {
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.card-craft:hover .icon-plate {
+  transform: translateY(-3px) rotate(-3deg);
+}
+.card-craft .go-arrow {
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.card-craft:hover .go-arrow {
+  transform: translateX(5px);
+}
 
 /* --- Legal / policy prose ----------------------------------------------- */
 .prose-legal {

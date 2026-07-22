@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { verticals } from "@/config/verticals";
 import TradeIcon from "./TradeIcon";
+import Reveal from "./Reveal";
 
 /**
  * Full-bleed, edge-to-edge row of demo-template tiles with a bottom-gradient
@@ -13,16 +14,18 @@ import TradeIcon from "./TradeIcon";
 export default function DemoTilesStrip() {
   return (
     <section className="py-20 sm:py-24">
-      <div className="container-x mb-8">
-        <p className="eyebrow">Real, working templates</p>
-        <h2 className="mt-3 max-w-2xl font-display text-3xl font-extrabold tracking-tight text-ink sm:text-4xl">
-          Keep money like these five would.
-        </h2>
-        <p className="mt-3 max-w-xl text-ink-soft">
-          Not customers — our own live demos, each showing the honest yearly saving from the
-          calculator. Open any of them.
-        </p>
-      </div>
+      <Reveal>
+        <div className="container-x mb-8">
+          <p className="eyebrow">Real, working templates</p>
+          <h2 className="mt-3 max-w-2xl font-craft text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+            Keep money like these five would.
+          </h2>
+          <p className="mt-3 max-w-xl text-ink-soft">
+            Not customers — our own live demos, each showing the honest yearly saving from the
+            calculator. Open any of them.
+          </p>
+        </div>
+      </Reveal>
 
       <div className="relative">
         <div className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto">
