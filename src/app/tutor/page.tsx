@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import VerticalPitch from "@/components/shared/VerticalPitch";
 import { getVertical } from "@/config/verticals";
+import { verticalMetadata } from "@/lib/seo";
 
 const v = getVertical("tutor");
 
-export const metadata: Metadata = v
-  ? { title: v.heroTitle, description: v.heroSub }
-  : {};
+export const metadata: Metadata = verticalMetadata("tutor");
 
 export default function Page() {
   if (!v) notFound();

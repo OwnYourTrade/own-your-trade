@@ -2,15 +2,36 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import CookieBanner from "@/components/shared/CookieBanner";
+import { SITE_URL, SITE_NAME, OG_IMAGE } from "@/lib/seo";
+
+const HOME_TITLE = "Own Your Trade — commission-free ordering & booking systems";
+const HOME_DESCRIPTION =
+  "Your own online ordering or booking website on a proven system — for takeaways, driving instructors, barbers, tutors and personal trainers. Keep your customers, pay no commission.";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Own Your Trade — stop paying commission on customers you earned",
+    default: HOME_TITLE,
     template: "%s · Own Your Trade",
   },
-  description:
-    "Own Your Trade builds independent takeaways, driving instructors, barbers, tutors and personal trainers their own ordering and booking system — so you keep the customers you already earned, without paying 25–30% commission.",
-  metadataBase: new URL("http://localhost:3000"),
+  description: HOME_DESCRIPTION,
+  applicationName: SITE_NAME,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: SITE_NAME,
+    locale: "en_GB",
+    url: "/",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: [OG_IMAGE.url],
+  },
 };
 
 export default function RootLayout({
