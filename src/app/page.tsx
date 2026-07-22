@@ -69,9 +69,9 @@ export default function HubHome() {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="9" /><path d="M12 11v5M12 8h.01" /></svg>
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block font-display text-sm font-bold text-ink sm:text-base">What is Own Your Trade?</span>
+              <span className="block font-display text-sm font-bold text-ink sm:text-base">What we do</span>
               <span className="mt-0.5 block text-sm text-ink-soft">
-                Your own ordering or booking site, on a proven system, live in under 2 weeks — no commission.
+                Ordering &amp; booking systems for local trades, plus affordable custom websites — one flat fee, no commission.
               </span>
             </span>
             <span className="hidden shrink-0 whitespace-nowrap font-semibold text-stamp sm:inline">

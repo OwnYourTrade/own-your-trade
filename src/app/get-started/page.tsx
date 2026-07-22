@@ -13,7 +13,6 @@ export default function GetStartedPage() {
   return (
     <HubShell heroTone="light">
       <section className="grain relative overflow-hidden bg-paper">
-        <div aria-hidden="true" className="arch-top absolute -right-24 top-20 hidden h-[400px] w-[300px] border-2 border-sand-dark/60 lg:block" />
         <div className="container-x relative pb-20 pt-32 sm:pt-36">
           <Reveal>
             <div className="max-w-2xl">

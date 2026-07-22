@@ -11,7 +11,7 @@ export default function OwnYourTradeFooter() {
       <section id="contact" className="border-b border-paper/10">
         <div className="container-x grid gap-10 py-16 lg:grid-cols-[1fr_1.05fr] lg:py-20">
           <div>
-            <p className="eyebrow text-stamp-light">Own Your Trade</p>
+            <p className="eyebrow eyebrow-mint">Own Your Trade</p>
             <h2 className="mt-3 font-craft text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">
               Ready to own your <span className="italic text-ledger-light">trade?</span>
             </h2>
@@ -60,7 +60,7 @@ export default function OwnYourTradeFooter() {
         <div>
           <h4 className="mono-label text-paper/50">Product</h4>
           <ul className="mt-4 space-y-2 text-sm">
-            <li><Link href="/what-is-this" className="text-paper/80 hover:text-paper">What is this?</Link></li>
+            <li><Link href="/what-is-this" className="text-paper/80 hover:text-paper">What we do</Link></li>
             <li><Link href="/templates" className="text-paper/80 hover:text-paper">Templates</Link></li>
             <li><Link href="/#pricing" className="text-paper/80 hover:text-paper">Pricing</Link></li>
             <li><Link href="/login" className="text-paper/80 hover:text-paper">Owner login</Link></li>

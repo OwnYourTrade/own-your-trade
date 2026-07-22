@@ -23,7 +23,7 @@ export default function TemplatesPage() {
     <HubShell heroTone="light">
       {/* Hero */}
       <section className="grain relative overflow-hidden bg-paper">
-        <div aria-hidden="true" className="arch-top absolute -left-20 top-28 hidden h-[380px] w-[290px] border-2 border-sand-dark/60 lg:block" />
+        <div aria-hidden="true" className="arch-door absolute bottom-0 right-[6%] hidden h-[320px] w-[240px] border-2 border-sand-dark/70 bg-sand/40 lg:block" />
         <div className="container-x relative pt-32 pb-16 sm:pt-36">
           <Reveal>
             <p className="eyebrow">Own Your Trade — templates</p>

@@ -5,9 +5,9 @@ import Reveal from "@/components/shared/Reveal";
 import { site } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: "What is this?",
+  title: "What we do",
   description:
-    "Own Your Trade in plain terms: your own ordering or booking site, built on a proven system, live in under 2 weeks, with no commission.",
+    "We build online ordering and booking systems for local trades, plus affordable custom websites to run them on — one flat fee, no commission, live in under 2 weeks.",
 };
 
 const plain = [
@@ -34,21 +34,23 @@ export default function WhatIsThisPage() {
     <HubShell heroTone="light">
       {/* Hero */}
       <section className="grain relative overflow-hidden bg-paper">
-        {/* Doorway echo instead of a blur blob */}
-        <div aria-hidden="true" className="arch-top absolute -right-24 top-24 hidden h-[420px] w-[320px] border-2 border-sand-dark/60 lg:block" />
+        {/* Floor-standing doorway echo — anchored to the section base so it
+            reads as a door on the ground, never a cropped shape */}
+        <div aria-hidden="true" className="arch-door absolute bottom-0 right-[6%] hidden h-[340px] w-[250px] border-2 border-sand-dark/70 bg-sand/40 lg:block" />
         <div className="container-x relative pt-32 pb-16 sm:pt-36">
           <Reveal>
-            <p className="eyebrow">Own Your Trade — what is this?</p>
+            <p className="eyebrow">Own Your Trade — what we do</p>
             <h1 className="mt-6 max-w-3xl font-craft text-5xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-              Your own ordering or booking site, on a{" "}
-              <span className="italic text-stamp">proven system.</span>
+              We build ordering &amp; booking systems — and the websites to{" "}
+              <span className="italic text-stamp">run them on.</span>
             </h1>
           </Reveal>
           <Reveal delay={120}>
             <p className="mt-6 max-w-2xl text-lg text-ink-soft">
-              In one sentence: you get your own site, built on a system that already works, live in
-              under two weeks — and you never pay commission. That&apos;s the whole thing. No app to
-              download, no marketplace, no cut of every order.
+              Plainly: we build online ordering and booking systems for local trades — takeaways,
+              barbers, driving instructors, tutors and PTs — plus affordable, properly-built
+              websites to run them on. You pay one flat monthly fee, not a cut of every job, so it
+              costs less than the commission platforms from day one. Live in under two weeks.
             </p>
             <div className="mt-8 flex flex-wrap gap-2">
               {site.claims.map((c) => (
@@ -93,7 +95,7 @@ export default function WhatIsThisPage() {
         <div className="container-x relative py-20 sm:py-24">
           <Reveal>
             <div className="max-w-2xl">
-              <p className="eyebrow text-paper/70">How it works</p>
+              <p className="eyebrow eyebrow-light">How it works</p>
               <h2 className="mt-3 font-craft text-3xl font-semibold tracking-tight sm:text-4xl">
                 Four steps. That&apos;s the whole loop.
               </h2>

@@ -15,7 +15,6 @@ export default function ContactPage() {
   return (
     <HubShell heroTone="light">
       <section className="grain relative overflow-hidden bg-paper">
-        <div aria-hidden="true" className="arch-top absolute -right-24 top-24 hidden h-[420px] w-[320px] border-2 border-sand-dark/60 lg:block" />
         <div className="container-x relative grid gap-10 pt-32 pb-20 sm:pt-36 lg:grid-cols-[1fr_1.05fr] lg:gap-12">
           <Reveal>
             <div>

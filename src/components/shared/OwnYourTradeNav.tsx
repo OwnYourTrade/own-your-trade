@@ -8,7 +8,7 @@ import TradeIcon from "./TradeIcon";
 import { verticals } from "@/config/verticals";
 
 const productLinks = [
-  { href: "/what-is-this", label: "What is this?", sub: "The product in plain terms", icon: "info" },
+  { href: "/what-is-this", label: "What we do", sub: "The service in plain terms", icon: "info" },
   { href: "/templates", label: "Templates", sub: "Proven, tested, made yours", icon: "grid" },
   { href: "/what-is-this#how", label: "How it works", sub: "Order/book → pay → dashboard", icon: "steps" },
   { href: "/#pricing", label: "Pricing", sub: "One flat fee, three levels", icon: "tag" },
@@ -93,7 +93,6 @@ export default function OwnYourTradeNav({ heroTone = "light" }: { heroTone?: "li
         </nav>
 
         <div className="hidden items-center gap-4 md:flex">
-          <Link href="/login" className={`text-sm font-medium transition-colors ${linkColor}`}>Login</Link>
           <Link href="/get-started" className="btn-gold px-6 py-2.5 text-[13px]">Get started</Link>
         </div>
 
@@ -125,9 +124,8 @@ export default function OwnYourTradeNav({ heroTone = "light" }: { heroTone?: "li
               <Link key={l.href} href={l.href} className="border-b border-ink/5 py-2.5 text-ink">{l.label}</Link>
             ))}
             <Link href="/contact" className="border-b border-ink/5 py-2.5 font-semibold text-ink">Contact</Link>
-            <div className="mt-4 flex items-center gap-3">
-              <Link href="/login" className="btn-outline flex-1">Login</Link>
-              <Link href="/get-started" className="btn-gold flex-1">Get started</Link>
+            <div className="mt-4">
+              <Link href="/get-started" className="btn-gold w-full">Get started</Link>
             </div>
           </div>
         </nav>

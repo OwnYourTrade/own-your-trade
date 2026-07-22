@@ -19,7 +19,7 @@ export default function VerticalPitch({ v }: { v: Vertical }) {
           <Reveal>
             <div className="flex items-center gap-2 text-stamp-light">
               <TradeIcon name={v.icon} className="h-5 w-5" />
-              <span className="eyebrow text-stamp-light">Own Your Trade — {v.heroKicker}</span>
+              <span className="eyebrow eyebrow-mint">Own Your Trade — {v.heroKicker}</span>
             </div>
           </Reveal>
           <Reveal delay={90}>

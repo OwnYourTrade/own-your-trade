@@ -202,6 +202,23 @@ body {
 .arch-top {
   border-radius: 999px 999px 24px 24px;
 }
+/* Floor-standing doorway: fully-rounded top, flat base — anchor it to the
+   bottom of a section so any crop reads as a door on the ground, never a
+   shape cut off mid-air. */
+.arch-door {
+  border-radius: 999px 999px 0 0;
+  border-bottom: none;
+}
+
+/* Eyebrow colour variants. `.eyebrow` hard-codes stamp green, which wins over
+   Tailwind text-* utilities — so dark/green backgrounds need these instead.
+   Defined after .eyebrow's source order so they take precedence. */
+.eyebrow-light {
+  color: rgb(var(--c-paper) / 0.8);
+}
+.eyebrow-mint {
+  color: rgb(var(--c-stamp-light));
+}
 
 /* Scroll-reveal system. Hidden state only applies when scripting is enabled,
    so content is never invisible without JS; reduced motion shows instantly. */
