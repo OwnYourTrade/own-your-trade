@@ -21,7 +21,7 @@ export default function CartDrawer() {
       {/* Panel */}
       <aside
         className={`fixed right-0 top-0 z-[70] flex h-full w-full max-w-md flex-col bg-cream shadow-2xl transition-transform duration-300 ${
-          isOpen ? "translate-x-0" : "translate-x-full"
+          isOpen ? "visible translate-x-0" : "invisible translate-x-full"
         }`}
         role="dialog"
         aria-label="Your basket"

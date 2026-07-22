@@ -86,8 +86,8 @@ export default async function SuccessPage({
 
           {isDemo && (
             <div className="mt-6 rounded-xl border border-gold/40 bg-gold-light/20 px-5 py-3 text-center text-xs text-ink">
-              Demo mode — no real payment was taken. Add Stripe test keys to
-              enable live test-mode card payments.
+              This is a demo — no payment was taken. This page is exactly the
+              confirmation your customer would see after ordering.
             </div>
           )}
 
@@ -155,7 +155,7 @@ export default async function SuccessPage({
               Back to home
             </Link>
             <Link href="/takeaway/demo/dashboard" className="btn-primary">
-              See the kitchen dashboard →
+              See what you&apos;d see as the business owner →
             </Link>
           </div>
         </div>

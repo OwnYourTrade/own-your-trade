@@ -222,11 +222,11 @@ export default function OrderClient() {
                 className="btn-primary mt-4 w-full text-base"
               >
                 {submitting
-                  ? "Starting secure checkout…"
-                  : `Pay ${formatPrice(total)}`}
+                  ? "Placing your order…"
+                  : `Place order · ${formatPrice(total)}`}
               </button>
               <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-ink-soft">
-                <LockIcon /> Secure payment powered by Stripe (test mode)
+                <LockIcon /> Demo — no payment taken. On the real thing, cards go through Stripe.
               </p>
             </div>
           </div>

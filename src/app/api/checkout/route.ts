@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
-import { getStripe, stripeConfigured } from "@/lib/stripe";
-import { createOrder, priceCart, updateOrder, type CartInput } from "@/lib/orders";
+import { createOrder, priceCart, type CartInput } from "@/lib/orders";
 import { site, type OrderType } from "@/lib/site";
 
 export const runtime = "nodejs";
+
+// ---------------------------------------------------------------------------
+// DEMO checkout — the takeaway demo's "place order" endpoint. This is a
+// product demo, not a real transaction: no payment step, no card details.
+// The order is validated and priced server-side, saved, and the customer goes
+// straight to the confirmation page (exactly what their customer would see).
+// Real payments happen only in the Get Started signup flow (/api/signup),
+// which stays fully on Stripe.
+// ---------------------------------------------------------------------------
 
 type Body = {
   type: OrderType;
@@ -81,63 +89,14 @@ export async function POST(req: Request) {
   const customer = { name, phone, email, address, notes };
   const origin = originFrom(req);
 
-  // ---- Demo mode (no Stripe keys) ---------------------------------------
-  if (!stripeConfigured) {
-    const order = await createOrder({
-      type,
-      customer,
-      priced,
-      method: "demo",
-    });
-    return NextResponse.json({
-      url: `${origin}/takeaway/demo/order/success?order=${order.id}&demo=1`,
-      demo: true,
-    });
-  }
-
-  // ---- Real Stripe test-mode Checkout -----------------------------------
-  const stripe = getStripe()!;
-
-  // Create the order first so we always have a record, even if the customer
-  // abandons payment (it stays "unpaid" until the session completes).
-  const order = await createOrder({ type, customer, priced, method: "stripe" });
-
-  const line_items = priced.items.map((l) => ({
-    quantity: l.qty,
-    price_data: {
-      currency: "gbp",
-      unit_amount: Math.round(l.price * 100),
-      product_data: { name: l.name },
-    },
-  }));
-  if (priced.deliveryFee > 0) {
-    line_items.push({
-      quantity: 1,
-      price_data: {
-        currency: "gbp",
-        unit_amount: Math.round(priced.deliveryFee * 100),
-        product_data: { name: "Delivery" },
-      },
-    });
-  }
-
-  try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      line_items,
-      customer_email: email,
-      client_reference_id: order.id,
-      metadata: { orderId: order.id, type },
-      success_url: `${origin}/takeaway/demo/order/success?order=${order.id}&session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${origin}/takeaway/demo/order?canceled=1`,
-    });
-
-    await updateOrder(order.id, { stripeSessionId: session.id });
-
-    return NextResponse.json({ url: session.url });
-  } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Payment could not be started.";
-    return NextResponse.json({ error: message }, { status: 502 });
-  }
+  const order = await createOrder({
+    type,
+    customer,
+    priced,
+    method: "demo",
+  });
+  return NextResponse.json({
+    url: `${origin}/takeaway/demo/order/success?order=${order.id}&demo=1`,
+    demo: true,
+  });
 }

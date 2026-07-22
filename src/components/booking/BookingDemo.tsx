@@ -112,15 +112,15 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
             <Row k="Price" v={money(service.price)} />
           </div>
           <p className="mx-auto mt-6 max-w-sm text-sm text-ink-soft">
-            That booking just landed on the owner&apos;s live dashboard in real time — take a look
-            at the view {config.businessName} would run their day from.
+            This is exactly the confirmation your customer would see — and the booking just
+            landed on the owner&apos;s live dashboard in real time.
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
             <button onClick={() => { setDone(null); setTime(""); }} className="btn-outline">
               Book another
             </button>
             <Link href={`/${config.slug}/demo/dashboard`} className="btn-primary">
-              See it on the owner&apos;s dashboard →
+              See what you&apos;d see as the business owner →
             </Link>
           </div>
         </div>
