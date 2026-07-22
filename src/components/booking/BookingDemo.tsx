@@ -143,9 +143,10 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
         </div>
       </section>
 
-      <div className="container-x grid gap-8 py-10 lg:grid-cols-[1fr_360px]">
-        {/* Flow */}
-        <div className="space-y-8">
+      <div className="container-x grid gap-8 py-10 lg:grid-cols-[minmax(0,1fr)_360px]">
+        {/* Flow — min-w-0 lets the day strip's overflow-x-auto actually
+            scroll inside the column instead of stretching the page wide */}
+        <div className="min-w-0 space-y-8">
           <Step n={1} title="Choose a service">
             <div className="grid gap-3 sm:grid-cols-2">
               {config.services.map((s) => (

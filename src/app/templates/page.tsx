@@ -23,7 +23,13 @@ export default function TemplatesPage() {
     <HubShell heroTone="light">
       {/* Hero */}
       <section className="grain relative overflow-hidden bg-paper">
-        <div aria-hidden="true" className="arch-door absolute bottom-0 right-[6%] hidden h-[320px] w-[240px] border-2 border-sand-dark/70 bg-sand/40 lg:block" />
+        {/* A look through the doorway into a real demo */}
+        <div className="arch-door absolute bottom-0 right-[6%] hidden h-[320px] w-[240px] overflow-hidden border-2 border-sand-dark/70 shadow-warm lg:block">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/images/oyt/tutor-hero.jpg)" }} />
+          <div className="absolute inset-x-0 bottom-0 bg-ink/70 px-3 py-2 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-paper">
+            Thornfield Tutoring — a live demo
+          </div>
+        </div>
         <div className="container-x relative pt-32 pb-16 sm:pt-36">
           <Reveal>
             <p className="eyebrow">Own Your Trade — templates</p>
@@ -49,6 +55,13 @@ export default function TemplatesPage() {
             <h2 className="mt-2 font-craft text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
               Five real, working templates. Try any of them.
             </h2>
+            <p className="mt-3 max-w-3xl text-ink-soft">
+              Each tile opens a complete, working business site — browse it and place a test order
+              or booking (it&apos;s all sample data, nothing is charged). Then open the{" "}
+              <strong className="font-semibold text-ink">owner&apos;s view</strong> linked inside each
+              demo — the kitchen dashboard or booking diary — to see exactly what the business owner
+              sees the moment an order or booking lands.
+            </p>
           </div>
         </Reveal>
         <div className="grid grid-cols-1 gap-px bg-ink/10 sm:grid-cols-2 lg:grid-cols-5">

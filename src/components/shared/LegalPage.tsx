@@ -20,7 +20,6 @@ export default function LegalPage({
   return (
     <HubShell heroTone="light">
       <section className="grain relative overflow-hidden bg-paper">
-        <div aria-hidden="true" className="arch-door absolute bottom-0 right-[6%] hidden h-[220px] w-[180px] border-2 border-sand-dark/70 bg-sand/40 lg:block" />
         <div className="container-x relative pt-32 pb-8 sm:pt-36">
           <p className="eyebrow">Own Your Trade — Legal</p>
           <h1 className="mt-5 font-craft text-4xl font-semibold tracking-tight text-ink sm:text-5xl">

@@ -75,11 +75,14 @@ export default function CompareTable({
       </div>
 
       {/* Concrete £ saved */}
-      <div className="mt-5 flex flex-col gap-2 rounded-2xl bg-ledger p-6 text-ink sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-5 flex flex-col gap-3 rounded-2xl bg-ledger p-6 text-ink shadow-warm sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="mono-label text-ink/60">What that adds up to</p>
-          <p className="tnum font-display text-2xl font-extrabold">
+          <p className="tnum font-craft text-3xl font-semibold">
             You keep {saved.headline}
+          </p>
+          <p className="mt-1 text-sm font-semibold text-ink/80">
+            — against one flat fee from £29 a month.
           </p>
         </div>
         <p className="max-w-sm text-xs leading-relaxed text-ink/70">{saved.basis}</p>

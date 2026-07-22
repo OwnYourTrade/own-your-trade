@@ -76,6 +76,12 @@ export const verticals: Vertical[] = [
     competitors: ["Just Eat", "Deliveroo", "Flipdish"],
     compareRows: [
       {
+        feature: "On a £22 order",
+        category: "cost",
+        oyt: "You keep all £22",
+        rivals: { "Just Eat": "Up to £6.60 taken (14–30%)", Deliveroo: "Up to £7.70 taken (25–35%)", Flipdish: "No commission, but SaaS fees on contract" },
+      },
+      {
         feature: "Commission per order",
         category: "cost",
         oyt: "None — flat monthly fee",
@@ -145,6 +151,12 @@ export const verticals: Vertical[] = [
     competitors: ["Lesson8", "BookLive"],
     compareRows: [
       {
+        feature: "A year of bookings",
+        category: "cost",
+        oyt: "One flat fee — from £348 a year",
+        rivals: { Lesson8: "Subscription plus lead fees — commonly £1,500+", BookLive: "Subscription plus lead fees — commonly £1,500+" },
+      },
+      {
         feature: "Monthly platform fee",
         category: "cost",
         oyt: "One flat fee, all pupils",
@@ -207,6 +219,12 @@ export const verticals: Vertical[] = [
       "Fresha and Treatwell look free until they charge you for new-client bookings and card processing, and put your regulars in their marketplace. Book them on your own page instead.",
     competitors: ["Fresha", "Treatwell"],
     compareRows: [
+      {
+        feature: "On a £20 new-client booking",
+        category: "cost",
+        oyt: "You keep all £20",
+        rivals: { Fresha: "Around £4 taken (~20%)", Treatwell: "Commission taken, plus subscription" },
+      },
       {
         feature: "New-client booking fee",
         category: "cost",
@@ -271,16 +289,22 @@ export const verticals: Vertical[] = [
     competitors: ["Tutorful", "MyTutor"],
     compareRows: [
       {
+        feature: "On a £30 lesson",
+        category: "cost",
+        oyt: "You keep all £30",
+        rivals: { Tutorful: "Around £6 taken (roughly a fifth)", MyTutor: "A cut of every £30" },
+      },
+      {
         feature: "Commission per lesson",
         category: "cost",
         oyt: "None — flat monthly fee",
         rivals: { Tutorful: "Fee on every lesson", MyTutor: "Cut of every lesson" },
       },
       {
-        feature: "Applies to repeat pupils",
+        feature: "Repeat lessons, same pupil",
         category: "cost",
-        oyt: "No",
-        rivals: { Tutorful: "Yes, ongoing", MyTutor: "Yes, ongoing" },
+        oyt: "Never charged — flat fee regardless",
+        rivals: { Tutorful: "Keeps taking a fee on every repeat lesson", MyTutor: "Keeps taking a cut on every repeat lesson" },
       },
       {
         feature: "Own the parent relationship",
@@ -333,6 +357,12 @@ export const verticals: Vertical[] = [
       "Class-booking software charges a hefty monthly fee plus a cut of every transaction. For a solo trainer or small studio, your own booking page does the same job without the overhead.",
     competitors: ["Class-booking platforms"],
     compareRows: [
+      {
+        feature: "Software cost per year",
+        category: "cost",
+        oyt: "From £348 flat",
+        rivals: { "Class-booking platforms": "£900–£1,800+ before transaction fees" },
+      },
       {
         feature: "Monthly software fee",
         category: "cost",

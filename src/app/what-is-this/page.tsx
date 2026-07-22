@@ -34,9 +34,14 @@ export default function WhatIsThisPage() {
     <HubShell heroTone="light">
       {/* Hero */}
       <section className="grain relative overflow-hidden bg-paper">
-        {/* Floor-standing doorway echo — anchored to the section base so it
-            reads as a door on the ground, never a cropped shape */}
-        <div aria-hidden="true" className="arch-door absolute bottom-0 right-[6%] hidden h-[340px] w-[250px] border-2 border-sand-dark/70 bg-sand/40 lg:block" />
+        {/* A look through the doorway into a real demo — the arch always frames
+            something, it's never an empty shape */}
+        <div className="arch-door absolute bottom-0 right-[6%] hidden h-[340px] w-[250px] overflow-hidden border-2 border-sand-dark/70 shadow-warm lg:block">
+          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/images/oyt/barber-hero.jpg)" }} />
+          <div className="absolute inset-x-0 bottom-0 bg-ink/70 px-3 py-2 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-paper">
+            Fade &amp; Co — a live demo
+          </div>
+        </div>
         <div className="container-x relative pt-32 pb-16 sm:pt-36">
           <Reveal>
             <p className="eyebrow">Own Your Trade — what we do</p>

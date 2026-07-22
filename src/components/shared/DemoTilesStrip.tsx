@@ -20,9 +20,10 @@ export default function DemoTilesStrip() {
           <h2 className="mt-3 max-w-2xl font-craft text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
             Keep money like these five would.
           </h2>
-          <p className="mt-3 max-w-xl text-ink-soft">
+          <p className="mt-3 max-w-2xl text-ink-soft">
             Not customers — our own live demos, each showing the honest yearly saving from the
-            calculator. Open any of them.
+            calculator. Open any of them, place a test order or booking, then open the owner&apos;s
+            diary inside to see exactly what the owner sees when it lands.
           </p>
         </div>
       </Reveal>
