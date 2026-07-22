@@ -1,12 +1,14 @@
 import { site, type Tier } from "@/config/site";
 import type { Signup } from "./signups";
+import type { Lead } from "./leads";
 
 // ===========================================================================
 //  Transactional email via Resend (https://resend.com).
 //
-//  ONLY fires for real "Get started" signups that have completed Stripe
-//  payment. The demo/takeaway ordering flow and the booking demos never call
-//  anything in this module — those are sample data, not real signups.
+//  Fires for real "Get started" signups that complete Stripe payment (customer
+//  confirmation + owner notification) and for contact-form enquiries (owner
+//  notification only). The demo/takeaway ordering flow and the booking demos
+//  never call anything in this module — those are sample data.
 //
 //  Config comes entirely from env vars (never hardcode the key):
 //    RESEND_API_KEY            required to send; when absent, this module is a
@@ -67,6 +69,14 @@ async function sendEmail(opts: {
 // --------------------------------------------------------------------------
 
 const money = (n: number) => `${site.currency}${n}`;
+
+/** Escape user-supplied text before putting it into email HTML. */
+const esc = (s: string) =>
+  s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 
 function shell(bodyInner: string): string {
   return `<!doctype html><html><body style="margin:0;background:#EDEAE2;padding:24px;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#1C2321;">
@@ -186,4 +196,52 @@ export async function sendSignupNotifications(
   }
 
   return { ok: customer.ok && owner.ok, customer, owner };
+}
+
+// --------------------------------------------------------------------------
+// Public entry point — notify the owner of a contact-form enquiry (no
+// customer email; an enquiry isn't a paid signup). Never throws.
+// --------------------------------------------------------------------------
+
+export async function sendLeadNotification(lead: Lead): Promise<SendResult> {
+  const first = (lead.name.split(" ")[0] || "there").trim();
+  const rows = [
+    detailRow("Reference", esc(lead.id)),
+    detailRow("Name", esc(lead.name)),
+    detailRow("Email", esc(lead.email)),
+    lead.phone ? detailRow("Phone", esc(lead.phone)) : "",
+    lead.business ? detailRow("Business", esc(lead.business)) : "",
+    lead.trade ? detailRow("Trade", esc(lead.trade)) : "",
+    detailRow("Came from", esc(lead.source)),
+  ].join("");
+
+  const inner = `
+    <h1 style="font-size:22px;margin:0 0 4px;">New enquiry ✉️</h1>
+    <p style="font-size:15px;line-height:1.6;color:#3a403d;margin:0 0 20px;">
+      <strong>${esc(lead.name)}</strong> sent a message through the contact form.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+      style="background:#f4f2ec;border-radius:12px;padding:16px 18px;margin:0 0 20px;">
+      ${rows}
+    </table>
+    ${
+      lead.message
+        ? `<p style="font-size:14px;line-height:1.6;color:#3a403d;margin:0 0 16px;"><strong>Message:</strong><br/>${esc(lead.message).replace(/\n/g, "<br/>")}</p>`
+        : `<p style="font-size:14px;line-height:1.6;color:#6b716e;margin:0 0 16px;">(No message left.)</p>`
+    }
+    <p style="font-size:14px;line-height:1.6;color:#6b716e;margin:0;">
+      Reply to this email to go straight to ${esc(first)}.
+    </p>`;
+
+  const subject = `New enquiry: ${lead.name}${lead.business ? ` (${lead.business})` : ""}`;
+  const res = await sendEmail({
+    to: OWNER_EMAIL,
+    subject,
+    html: shell(inner),
+    replyTo: lead.email,
+  });
+
+  if (!res.ok) console.error("[email] lead notification failed:", res.error);
+  else console.log(`[email] lead ${lead.id} — owner notified:${res.id}`);
+  return res;
 }

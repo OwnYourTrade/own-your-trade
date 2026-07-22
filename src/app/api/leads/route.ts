@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createLead, listLeads } from "@/lib/leads";
+import { sendLeadNotification } from "@/lib/email";
 import { isAdmin } from "@/lib/auth";
 
 export const runtime = "nodejs";
@@ -45,6 +46,10 @@ export async function POST(req: Request) {
     phone: str(body.phone) || undefined,
     message: str(body.message) || undefined,
   });
+
+  // Notify the owner by email. Never blocks the response on an email error —
+  // the enquiry is already saved to /admin regardless.
+  await sendLeadNotification(lead);
 
   return NextResponse.json({ ok: true, id: lead.id });
 }
