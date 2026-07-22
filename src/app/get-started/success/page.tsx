@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HubShell from "@/components/shared/HubShell";
-import { getSignup, markPaidBySession, markNotified, type Signup } from "@/lib/signups";
+import { getSignup, markPaidBySession, markNotified, updateSignup, type Signup } from "@/lib/signups";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
 import { sendSignupNotifications } from "@/lib/email";
 import { site } from "@/config/site";
+import ManageBillingButton from "@/components/shared/ManageBillingButton";
 
 export const metadata: Metadata = { title: "You're in", robots: { index: false } };
 
@@ -25,6 +26,19 @@ export default async function SignupSuccessPage({
       const session = await getStripe()!.checkout.sessions.retrieve(sessionId);
       if (session.payment_status === "paid") {
         await markPaidBySession(sessionId);
+        // Record the recurring-billing identifiers (webhook also does this;
+        // both paths are idempotent writes of the same values).
+        const customerId =
+          typeof session.customer === "string" ? session.customer : session.customer?.id;
+        const subscriptionId =
+          typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
+        if (customerId || subscriptionId) {
+          await updateSignup(signup.id, {
+            stripeCustomerId: customerId,
+            stripeSubscriptionId: subscriptionId,
+            subscriptionStatus: signup.subscriptionStatus ?? "active",
+          });
+        }
         paid = true;
         signup = await getSignup(signup.id);
       }
@@ -87,6 +101,8 @@ export default async function SignupSuccessPage({
             <Link href="/" className="btn-outline">Back to home</Link>
             <a href={`mailto:${site.operator.email}`} className="btn-primary">Email us now</a>
           </div>
+
+          {paid && !isDemo && sessionId && <ManageBillingButton sessionId={sessionId} />}
         </div>
       </section>
     </HubShell>

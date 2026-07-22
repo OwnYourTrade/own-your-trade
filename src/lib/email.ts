@@ -133,6 +133,10 @@ function customerEmail(signup: Signup, tier: Tier | undefined): { subject: strin
     </p>
     <p style="font-size:15px;line-height:1.6;color:#3a403d;margin:16px 0 0;">
       Nothing you need to do right now — just keep an eye on your inbox.
+    </p>
+    <p style="font-size:13px;line-height:1.6;color:#6b716e;margin:14px 0 0;">
+      Your plan renews monthly and you can update your card or cancel any time — use the
+      &ldquo;Manage billing&rdquo; link on your confirmation page, or just reply to this email.
     </p>`;
   return { subject: `You're in — ${signup.business} on ${planName} ✓`, html: shell(inner) };
 }
@@ -196,6 +200,54 @@ export async function sendSignupNotifications(
   }
 
   return { ok: customer.ok && owner.ok, customer, owner };
+}
+
+/** Escape helper for user-supplied strings in email HTML. */
+const esc2 = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+// --------------------------------------------------------------------------
+// Owner alert — a subscription payment failed (sent once per failure episode,
+// not on every Stripe retry). Never throws.
+// --------------------------------------------------------------------------
+
+export async function sendPaymentFailedNotification(
+  signup: Signup,
+  tier: Tier | undefined
+): Promise<SendResult> {
+  const planName = tier ? tier.name : signup.tier;
+  const inner = `
+    <h1 style="font-size:22px;margin:0 0 4px;">Payment failed ⚠️</h1>
+    <p style="font-size:15px;line-height:1.6;color:#3a403d;margin:0 0 20px;">
+      The monthly payment for <strong>${esc2(signup.business)}</strong> didn&apos;t go through.
+      Their record in /admin is now marked <strong>Payment failed</strong>.
+    </p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+      style="background:#f4f2ec;border-radius:12px;padding:16px 18px;margin:0 0 20px;">
+      ${detailRow("Reference", esc2(signup.id))}
+      ${detailRow("Business", esc2(signup.business))}
+      ${detailRow("Contact", esc2(signup.name))}
+      ${detailRow("Email", esc2(signup.email))}
+      ${detailRow("Plan", esc2(planName))}
+      ${detailRow("Monthly amount", tier ? money(tier.monthly) : "—")}
+    </table>
+    <p style="font-size:14px;line-height:1.6;color:#6b716e;margin:0;">
+      Stripe retries failed payments automatically (and can email them a link to update their
+      card, if dunning emails are enabled in your Stripe settings). No action needed unless it
+      keeps failing — you can open their billing portal from /admin, or reply to this email to
+      go straight to ${esc2(signup.name.split(" ")[0] || "them")}.
+    </p>`;
+
+  const res = await sendEmail({
+    to: OWNER_EMAIL,
+    subject: `Payment failed: ${signup.business} (${planName})`,
+    html: shell(inner),
+    replyTo: signup.email,
+  });
+
+  if (!res.ok) console.error("[email] payment-failed notification failed:", res.error);
+  else console.log(`[email] payment-failed ${signup.id} — owner notified:${res.id}`);
+  return res;
 }
 
 // --------------------------------------------------------------------------

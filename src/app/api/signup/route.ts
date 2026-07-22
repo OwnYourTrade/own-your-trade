@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type Stripe from "stripe";
 import { getStripe, stripeConfigured } from "@/lib/stripe";
 import { createSignup, updateSignup, listSignups } from "@/lib/signups";
 import { isAdmin } from "@/lib/auth";
@@ -97,44 +98,48 @@ export async function POST(req: Request) {
     });
   }
 
-  // ---- Real Stripe test-mode Checkout (first payment) -------------------
+  // ---- Real Stripe test-mode Checkout: recurring subscription -----------
+  // The monthly fee is a genuine recurring price (charged automatically every
+  // month until cancelled); any one-off setup fee is added to the first
+  // invoice only. Cancellation is self-serve via the Stripe Billing Portal.
   const signup = await createSignup({
     ...base,
     payment: { status: "unpaid", method: "stripe", amount: firstAmount },
   });
 
-  const line_items: {
-    quantity: number;
-    price_data: { currency: string; unit_amount: number; product_data: { name: string } };
-  }[] = [
-    {
+  try {
+    const stripe = getStripe()!;
+
+    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+    if (tier.setup > 0) {
+      line_items.push({
+        quantity: 1,
+        price_data: {
+          currency: "gbp",
+          unit_amount: Math.round(tier.setup * 100),
+          product_data: { name: `${tier.name} one-off setup & build` },
+        },
+      });
+    }
+    line_items.push({
       quantity: 1,
       price_data: {
         currency: "gbp",
         unit_amount: Math.round(tier.monthly * 100),
-        product_data: { name: `Own Your Trade — ${tier.name} plan (first month)` },
-      },
-    },
-  ];
-  if (tier.setup > 0) {
-    line_items.unshift({
-      quantity: 1,
-      price_data: {
-        currency: "gbp",
-        unit_amount: Math.round(tier.setup * 100),
-        product_data: { name: `${tier.name} one-off setup & build` },
+        recurring: { interval: "month" },
+        product_data: { name: `Own Your Trade — ${tier.name} plan` },
       },
     });
-  }
 
-  try {
-    const stripe = getStripe()!;
     const session = await stripe.checkout.sessions.create({
-      mode: "payment",
+      mode: "subscription",
       line_items,
       customer_email: email,
       client_reference_id: signup.id,
       metadata: { signupId: signup.id, tier: tier.id, trade: vertical.slug, business },
+      subscription_data: {
+        metadata: { signupId: signup.id, tier: tier.id, business },
+      },
       success_url: `${origin}/get-started/success?signup=${signup.id}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/get-started?trade=${vertical.slug}&tier=${tier.id}&canceled=1`,
     });

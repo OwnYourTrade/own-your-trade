@@ -21,6 +21,31 @@ const PAY_META: Record<string, { label: string; badge: string }> = {
   unpaid: { label: "Unpaid", badge: "bg-stamp/15 text-stamp" },
 };
 
+/** Human badge for the live Stripe subscription state on a signup. */
+function subscriptionBadge(s: Signup): { label: string; badge: string } | null {
+  if (!s.subscriptionStatus) return null;
+  const end = s.currentPeriodEnd
+    ? new Date(s.currentPeriodEnd).toLocaleDateString("en-GB", { day: "numeric", month: "short" })
+    : null;
+  if (s.subscriptionStatus === "canceled")
+    return { label: "Sub cancelled", badge: "bg-ink/10 text-ink-soft line-through" };
+  if (s.cancelAtPeriodEnd)
+    return { label: end ? `Cancels ${end}` : "Cancels at period end", badge: "bg-stamp/15 text-stamp" };
+  if (s.subscriptionStatus === "past_due")
+    return { label: "Payment failed", badge: "bg-stamp text-paper" };
+  if (s.subscriptionStatus === "active")
+    return { label: end ? `Renews ${end}` : "Sub active", badge: "bg-stamp/10 text-stamp" };
+  return { label: `Sub: ${s.subscriptionStatus}`, badge: "bg-ink/10 text-ink-soft" };
+}
+
+/** Does this signup still contribute to MRR? */
+function contributesToMrr(s: Signup): boolean {
+  if (s.payment.status === "unpaid") return false;
+  if (!s.subscriptionStatus) return true; // demo/legacy rows
+  if (s.subscriptionStatus === "canceled" || s.subscriptionStatus === "incomplete_expired") return false;
+  return true;
+}
+
 type Tab = "signups" | "leads";
 
 export default function AdminClient({
@@ -81,10 +106,28 @@ export default function AdminClient({
     const paid = signups.filter((s) => s.payment.status === "paid" || s.payment.status === "demo");
     const revenue = paid.reduce((sum, s) => sum + s.payment.amount, 0);
     const mrr = signups
-      .filter((s) => s.payment.status !== "unpaid")
+      .filter(contributesToMrr)
       .reduce((sum, s) => sum + (site.pricing.tiers.find((x) => x.id === s.tier)?.monthly ?? 0), 0);
     return { total: signups.length, paid: paid.length, revenue, mrr };
   }, [signups]);
+
+  const [portalBusy, setPortalBusy] = useState<string | null>(null);
+  async function openPortal(signupId: string) {
+    setPortalBusy(signupId);
+    try {
+      const res = await fetch("/api/admin/billing-portal", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ signupId }),
+      });
+      const data = await res.json();
+      if (res.ok && data.url) window.open(data.url, "_blank", "noopener");
+      else alert(data.error || "Couldn't open the billing portal.");
+    } catch {
+      alert("Network error opening the billing portal.");
+    }
+    setPortalBusy(null);
+  }
 
   const weekLeads = useMemo(() => {
     const wk = now - 7 * 24 * 60 * 60 * 1000;
@@ -125,6 +168,7 @@ export default function AdminClient({
                 {signups.map((s) => {
                   const tier = site.pricing.tiers.find((x) => x.id === s.tier);
                   const pm = PAY_META[s.payment.status] ?? PAY_META.unpaid;
+                  const sub = subscriptionBadge(s);
                   return (
                     <div key={s.id} className="ticket p-4">
                       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -134,6 +178,9 @@ export default function AdminClient({
                             <span className="stamp-badge">{s.trade}</span>
                             <span className="rounded-full bg-ink px-2.5 py-0.5 text-[11px] font-bold text-paper">{tier?.name ?? s.tier}</span>
                             <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${pm.badge}`}>{pm.label}</span>
+                            {sub && (
+                              <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${sub.badge}`}>{sub.label}</span>
+                            )}
                           </div>
                           <p className="mt-1.5 text-sm text-ink-soft">
                             {s.name} · <a href={`mailto:${s.email}`} className="hover:text-stamp">{s.email}</a> · <a href={`tel:${s.phone}`} className="hover:text-stamp">{s.phone}</a>
@@ -149,6 +196,15 @@ export default function AdminClient({
                           <p className="tnum font-mono text-lg font-bold text-ink">{site.currency}{s.payment.amount}</p>
                           <p className="font-mono text-xs text-ink-soft">{mounted ? timeAgo(s.createdAt, now) : ""}</p>
                           <p className="mt-0.5 font-mono text-[11px] text-ink-soft/60">{s.id}</p>
+                          {s.stripeCustomerId && (
+                            <button
+                              onClick={() => openPortal(s.id)}
+                              disabled={portalBusy === s.id}
+                              className="mt-2 rounded-full border border-ink/20 px-3 py-1 text-[11px] font-semibold text-ink transition hover:border-stamp hover:text-stamp disabled:opacity-50"
+                            >
+                              {portalBusy === s.id ? "Opening…" : "Billing portal ↗"}
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
