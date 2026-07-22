@@ -39,7 +39,7 @@ export default function HomePage() {
               <a href="#menu" className="btn-gold text-base">
                 Order Online
               </a>
-              <Link href="/takeaway/demo/menu" className="btn-outline border-cream/40 text-cream hover:border-gold-light hover:text-gold-light">
+              <Link href="/takeaway/demo/menu" className="btn-outline border-cream/50 !text-cream bg-ink/40 backdrop-blur-sm hover:border-gold-light hover:!text-gold-light">
                 View the Menu
               </Link>
             </div>
