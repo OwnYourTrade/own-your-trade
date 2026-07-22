@@ -33,7 +33,7 @@ export default function VerticalPitch({ v }: { v: Vertical }) {
           <Reveal delay={250}>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href={v.demoPath} className="btn-gold">Open the live demo →</Link>
-              <Link href="#compare" className="btn-outline border-paper/30 text-paper hover:border-paper hover:text-paper">
+              <Link href="#compare" className="btn-outline !border-paper/30 !text-paper hover:!border-paper">
                 See the comparison
               </Link>
             </div>
