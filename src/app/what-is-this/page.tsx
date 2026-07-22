@@ -46,7 +46,7 @@ export default function WhatIsThisPage() {
           <Reveal>
             <p className="eyebrow">Own Your Trade — what we do</p>
             <h1 className="mt-6 max-w-3xl font-craft text-5xl font-semibold leading-[1.05] tracking-tight text-ink sm:text-6xl">
-              We build ordering &amp; booking systems — and the websites to{" "}
+              We build ordering and booking systems — and the websites to{" "}
               <span className="italic text-stamp">run them on.</span>
             </h1>
           </Reveal>

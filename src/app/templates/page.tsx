@@ -23,13 +23,8 @@ export default function TemplatesPage() {
     <HubShell heroTone="light">
       {/* Hero */}
       <section className="grain relative overflow-hidden bg-paper">
-        {/* A look through the doorway into a real demo */}
-        <div className="arch-door absolute bottom-0 right-[6%] hidden h-[320px] w-[240px] overflow-hidden border-2 border-sand-dark/70 shadow-warm lg:block">
-          <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(/images/oyt/tutor-hero.jpg)" }} />
-          <div className="absolute inset-x-0 bottom-0 bg-ink/70 px-3 py-2 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-paper">
-            Thornfield Tutoring — a live demo
-          </div>
-        </div>
+        {/* No arch here — the five live-demo tiles directly below carry the
+            imagery for this page; an arch photo would just repeat one of them */}
         <div className="container-x relative pt-32 pb-16 sm:pt-36">
           <Reveal>
             <p className="eyebrow">Own Your Trade — templates</p>
