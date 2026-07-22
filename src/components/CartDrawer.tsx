@@ -110,7 +110,7 @@ export default function CartDrawer() {
                 Delivery & fees calculated at checkout.
               </p>
               <Link
-                href="/takeaway/demo/order"
+                href="/takeaway/demo/order?checkout=1"
                 onClick={closeCart}
                 className="btn-primary mt-4 w-full"
               >

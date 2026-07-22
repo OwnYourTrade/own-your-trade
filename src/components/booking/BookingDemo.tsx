@@ -249,6 +249,18 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
           </div>
         </div>
       </div>
+
+      {/* Mobile: sticky confirm bar so the CTA is always in reach */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-white px-4 pb-4 pt-3 shadow-lift lg:hidden">
+        <button onClick={submit} disabled={!ready || busy} className="btn-primary w-full">
+          {busy
+            ? "Confirming…"
+            : ready
+              ? `Confirm ${config.bookedNoun} · ${money(service.price)}`
+              : "Pick a time & add your details"}
+        </button>
+      </div>
+      <div className="h-20 lg:hidden" />
     </div>
   );
 }

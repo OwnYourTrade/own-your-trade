@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { menu, formatPrice } from "@/lib/menu";
@@ -15,8 +15,22 @@ export default function OrderClient() {
   const { lines, subtotal, count, setQty, remove } = useCart();
   const params = useSearchParams();
   const canceled = params.get("canceled") === "1";
+  const wantsCheckout = params.get("checkout") === "1";
 
   const [step, setStep] = useState<Step>("build");
+
+  // "Review & Checkout" from the basket drawer links here with ?checkout=1 —
+  // jump straight to the review/details step instead of landing back on the
+  // menu-heavy build step (which reads as "it sent me back to the menu").
+  // One-shot, and only once the cart has hydrated with items.
+  const jumped = useRef(false);
+  useEffect(() => {
+    if (wantsCheckout && count > 0 && !jumped.current) {
+      jumped.current = true;
+      setStep("details");
+      window.scrollTo({ top: 0 });
+    }
+  }, [wantsCheckout, count]);
   const [type, setType] = useState<OrderType>("collection");
   const [form, setForm] = useState({
     name: "",
@@ -323,6 +337,19 @@ export default function OrderClient() {
           </div>
         </div>
       </div>
+
+      {/* Mobile: sticky checkout bar so the next step is always in reach */}
+      {count > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-ink/10 bg-white px-4 pb-4 pt-3 shadow-lift lg:hidden">
+          <button
+            onClick={() => { setStep("details"); window.scrollTo({ top: 0 }); }}
+            className="btn-primary w-full"
+          >
+            Review &amp; checkout · {formatPrice(subtotal)}
+          </button>
+        </div>
+      )}
+      <div className="h-20 lg:hidden" />
     </div>
   );
 }
