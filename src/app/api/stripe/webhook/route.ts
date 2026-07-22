@@ -10,7 +10,7 @@ import {
   markNotified,
   updateSignup,
 } from "@/lib/signups";
-import { sendSignupNotifications } from "@/lib/email";
+import { sendSignupNotifications, sendPaymentFailedNotification } from "@/lib/email";
 import { site } from "@/config/site";
 
 export const runtime = "nodejs";
@@ -29,6 +29,22 @@ export const dynamic = "force-dynamic";
 
 const asId = (v: string | { id: string } | null | undefined): string | undefined =>
   typeof v === "string" ? v : v?.id ?? undefined;
+
+/**
+ * The invoice->subscription link moved between Stripe API versions:
+ * older versions expose `invoice.subscription`, newer ones nest it under
+ * `invoice.parent.subscription_details.subscription`. Accept both.
+ */
+function invoiceSubId(invoice: Stripe.Invoice): string | undefined {
+  const legacy = (invoice as unknown as { subscription?: string | { id: string } | null }).subscription;
+  if (legacy) return asId(legacy);
+  const modern = (
+    invoice as unknown as {
+      parent?: { subscription_details?: { subscription?: string | { id: string } | null } | null } | null;
+    }
+  ).parent?.subscription_details?.subscription;
+  return asId(modern ?? undefined);
+}
 
 /**
  * `current_period_end` lives on the subscription in older Stripe API versions
@@ -112,7 +128,7 @@ export async function POST(req: Request) {
 
       case "invoice.paid": {
         const invoice = event.data.object as Stripe.Invoice;
-        const subId = asId(invoice.subscription as string | Stripe.Subscription | null);
+        const subId = invoiceSubId(invoice);
         if (subId) {
           const signup = await getSignupBySubscription(subId);
           if (signup) await updateSignup(signup.id, { subscriptionStatus: "active" });
@@ -122,10 +138,19 @@ export async function POST(req: Request) {
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        const subId = asId(invoice.subscription as string | Stripe.Subscription | null);
+        const subId = invoiceSubId(invoice);
         if (subId) {
           const signup = await getSignupBySubscription(subId);
-          if (signup) await updateSignup(signup.id, { subscriptionStatus: "past_due" });
+          if (signup) {
+            // Stripe fires this on every retry — email the owner only when the
+            // subscription first tips into failure, not for each retry.
+            const firstFailure = signup.subscriptionStatus !== "past_due";
+            await updateSignup(signup.id, { subscriptionStatus: "past_due" });
+            if (firstFailure) {
+              const tier = site.pricing.tiers.find((t) => t.id === signup.tier);
+              await sendPaymentFailedNotification(signup, tier);
+            }
+          }
         }
         break;
       }
