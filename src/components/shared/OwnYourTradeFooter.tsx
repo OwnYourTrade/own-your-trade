@@ -12,8 +12,8 @@ export default function OwnYourTradeFooter() {
         <div className="container-x grid gap-10 py-16 lg:grid-cols-[1fr_1.05fr] lg:py-20">
           <div>
             <p className="eyebrow text-stamp-light">Own Your Trade</p>
-            <h2 className="mt-3 font-display text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
-              Ready to own your trade?
+            <h2 className="mt-3 font-craft text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl">
+              Ready to own your <span className="italic text-ledger-light">trade?</span>
             </h2>
             <p className="mt-4 max-w-md text-paper/70">
               Tell me about your place and how you take orders or bookings now. I&apos;ll come

@@ -55,7 +55,7 @@ export default async function SignupSuccessPage({
             <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
           </div>
           <p className="eyebrow mt-5">{paid ? "Payment received" : "You're signed up"}</p>
-          <h1 className="mt-2 font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
+          <h1 className="mt-2 font-craft text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
             You&apos;re in{signup ? `, ${signup.name.split(" ")[0]}` : ""}.
           </h1>
           <p className="mt-4 text-lg text-ink-soft">

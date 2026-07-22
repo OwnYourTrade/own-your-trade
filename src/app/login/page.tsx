@@ -42,15 +42,15 @@ export default function OwnerLogin() {
   }
 
   return (
-    <div className="grid min-h-screen place-items-center bg-paper px-5">
-      <div className="w-full max-w-sm">
+    <div className="grain grid min-h-screen place-items-center bg-paper px-5">
+      <div className="relative w-full max-w-sm">
         <div className="mb-6 text-center">
           <span className="wordmark text-sm text-ink">{site.wordmark}</span>
-          <h1 className="mt-4 font-display text-2xl font-extrabold text-ink">Owner sign in</h1>
+          <h1 className="mt-4 font-craft text-2xl font-semibold text-ink">Owner sign in</h1>
           <p className="mt-1 text-sm text-ink-soft">Access your live dashboard</p>
         </div>
 
-        <form onSubmit={submit} className="ticket p-6">
+        <form onSubmit={submit} className="rounded-2xl border border-sand-dark/70 bg-white p-6 shadow-warm">
           <label className="mb-1.5 block text-sm font-medium text-ink">Password</label>
           <input
             type="password"

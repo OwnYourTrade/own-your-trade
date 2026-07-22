@@ -244,8 +244,8 @@ body {
   position: absolute;
   left: 0.02em;
   right: 0.02em;
-  bottom: 0.02em;
-  height: 0.09em;
+  bottom: -0.16em; /* fully below descenders (y, g, p) — never through letters */
+  height: 0.085em;
   border-radius: 999px;
   background: rgb(var(--c-ledger));
   transform: scaleX(0);

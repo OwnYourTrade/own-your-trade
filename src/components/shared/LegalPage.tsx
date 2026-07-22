@@ -19,11 +19,11 @@ export default function LegalPage({
 }) {
   return (
     <HubShell heroTone="light">
-      <section className="relative overflow-hidden bg-paper">
-        <div className="pointer-events-none absolute -right-40 -top-40 h-[26rem] w-[26rem] rounded-full bg-stamp/10 blur-3xl" />
+      <section className="grain relative overflow-hidden bg-paper">
+        <div aria-hidden="true" className="arch-top absolute -right-24 top-24 hidden h-[340px] w-[260px] border-2 border-sand-dark/60 lg:block" />
         <div className="container-x relative pt-32 pb-8 sm:pt-36">
           <p className="eyebrow">Own Your Trade — Legal</p>
-          <h1 className="mt-5 font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
+          <h1 className="mt-5 font-craft text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
             {title}
           </h1>
           {intro && <p className="mt-4 max-w-2xl text-lg text-ink-soft">{intro}</p>}
@@ -35,7 +35,7 @@ export default function LegalPage({
 
       <section className="pb-24">
         <div className="container-x">
-          <div className="ticket max-w-3xl p-7 sm:p-10">
+          <div className="max-w-3xl rounded-2xl border border-sand-dark/70 bg-white p-7 shadow-warm sm:p-10">
             <div className="prose-legal">{children}</div>
           </div>
         </div>
