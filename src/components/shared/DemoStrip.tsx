@@ -35,7 +35,7 @@ export default function DemoStrip({
         </Link>
 
         <div className="flex items-center gap-4">
-          <span className="stamp-badge border-paper/40 text-paper/80">Live demo · {label}</span>
+          <span className="stamp-badge !border-paper/40 !text-paper/80">Live demo · {label}</span>
           {dashboardPath && (
             <Link href={dashboardPath} className="hidden font-mono uppercase tracking-[0.12em] text-paper/80 underline-offset-4 hover:text-paper hover:underline sm:inline">
               {dashboardLabel} →

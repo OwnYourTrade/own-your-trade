@@ -11,6 +11,8 @@ export type BookingService = {
   price: number;
   desc?: string;
   popular?: boolean;
+  /** Multi-session packages: how many separate time slots the customer books. */
+  sessions?: number;
 };
 
 export type BookingStaff = { id: string; name: string; role: string };
@@ -173,7 +175,7 @@ export const pt: BookingConfig = {
     { id: "pt-1to1", name: "1-to-1 Session", duration: 60, price: 40, desc: "One hour, fully tailored coaching.", popular: true },
     { id: "consult", name: "Free Consultation", duration: 30, price: 0, desc: "Goals, movement screen and a plan." },
     { id: "small-group", name: "Small-Group Session", duration: 45, price: 15, desc: "Up to 4 people — the fun, affordable option." },
-    { id: "block-6", name: "6-Session Block", duration: 60, price: 210, desc: "Six 1-to-1 sessions, booked in advance." },
+    { id: "block-6", name: "6-Session Block", duration: 60, price: 210, desc: "Six 1-to-1 sessions, booked in advance.", sessions: 6 },
   ],
   staff: [
     { id: "coach-max", name: "Coach Max", role: "Strength & conditioning" },

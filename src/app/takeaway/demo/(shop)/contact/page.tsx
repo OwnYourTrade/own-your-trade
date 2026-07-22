@@ -14,7 +14,7 @@ export default function ContactPage() {
     <>
       <section className="bg-lacquer-dark text-cream">
         <div className="container-x py-14 text-center">
-          <p className="eyebrow text-gold-light">Get in touch</p>
+          <p className="eyebrow eyebrow-gold">Get in touch</p>
           <h1 className="mt-3 font-display text-4xl sm:text-5xl">Contact &amp; opening hours</h1>
           <p className="mx-auto mt-4 max-w-xl text-cream/80">
             Pop in, call ahead, or send us a message — you&apos;ll find us right

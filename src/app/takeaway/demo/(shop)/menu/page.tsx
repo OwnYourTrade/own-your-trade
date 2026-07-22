@@ -25,7 +25,7 @@ export default function MenuPage() {
       {/* Page header */}
       <section className="bg-lacquer-dark text-cream">
         <div className="container-x py-14 text-center">
-          <p className="eyebrow text-gold-light">{identity.tagline}</p>
+          <p className="eyebrow eyebrow-gold">{identity.tagline}</p>
           <h1 className="mt-3 font-display text-4xl sm:text-5xl">Our Menu</h1>
           <p className="mx-auto mt-4 max-w-xl text-cream/80">
             Freshly cooked to order. Tap{" "}

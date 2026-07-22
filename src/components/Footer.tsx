@@ -26,7 +26,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="eyebrow text-gold-light">Find Us</h3>
+          <h3 className="eyebrow eyebrow-gold">Find Us</h3>
           <address className="mt-4 not-italic text-sm leading-relaxed text-cream/70">
             {site.address.line1}
             <br />
@@ -47,7 +47,7 @@ export default function Footer() {
         </div>
 
         <div>
-          <h3 className="eyebrow text-gold-light">Explore</h3>
+          <h3 className="eyebrow eyebrow-gold">Explore</h3>
           <ul className="mt-4 space-y-2 text-sm">
             {[
               { href: "/takeaway/demo/menu", label: "Full Menu" },

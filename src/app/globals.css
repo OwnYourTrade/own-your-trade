@@ -219,6 +219,9 @@ body {
 .eyebrow-mint {
   color: rgb(var(--c-stamp-light));
 }
+.eyebrow-gold {
+  color: rgb(var(--c-ledger-light));
+}
 
 /* Scroll-reveal system. Hidden state only applies when scripting is enabled,
    so content is never invisible without JS; reduced motion shows instantly. */

@@ -27,7 +27,7 @@ export default function HomePage() {
 
         <div className="container-x relative z-10 py-24 text-cream">
           <div className="max-w-2xl animate-fade-up">
-            <p className="eyebrow text-gold-light">{hero.eyebrow}</p>
+            <p className="eyebrow eyebrow-gold">{hero.eyebrow}</p>
             <h1 className="mt-4 font-display text-4xl leading-[1.05] sm:text-5xl md:text-6xl">
               {hero.title}
             </h1>
@@ -36,9 +36,9 @@ export default function HomePage() {
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/takeaway/demo/order" className="btn-gold text-base">
+              <a href="#menu" className="btn-gold text-base">
                 Order Online
-              </Link>
+              </a>
               <Link href="/takeaway/demo/menu" className="btn-outline border-cream/40 text-cream hover:border-gold-light hover:text-gold-light">
                 View the Menu
               </Link>
@@ -73,7 +73,7 @@ export default function HomePage() {
       </section>
 
       {/* ----------------------------------------------------- Featured dishes */}
-      <section className="paper-texture">
+      <section id="menu" className="paper-texture scroll-mt-24">
         <div className="container-x py-20">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -96,7 +96,7 @@ export default function HomePage() {
       <section className="bg-lacquer-dark text-cream">
         <div className="container-x grid items-center gap-12 py-20 lg:grid-cols-2">
           <div>
-            <p className="eyebrow text-gold-light">Great value</p>
+            <p className="eyebrow eyebrow-gold">Great value</p>
             <h2 className="mt-2 font-display text-3xl sm:text-4xl">
               Set meals for the whole table
             </h2>

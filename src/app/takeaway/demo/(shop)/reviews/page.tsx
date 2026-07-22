@@ -25,7 +25,7 @@ export default function ReviewsPage() {
           </div>
           <div className="hidden h-20 w-px bg-white/20 sm:block" />
           <div className="max-w-md">
-            <p className="eyebrow text-gold-light">{reviews.eyebrow}</p>
+            <p className="eyebrow eyebrow-gold">{reviews.eyebrow}</p>
             <h1 className="mt-2 font-display text-3xl sm:text-4xl">
               {site.reviewCount} Google reviews
             </h1>

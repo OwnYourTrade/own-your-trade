@@ -50,36 +50,61 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
   }, [config]);
 
   const service = config.services.find((s) => s.id === serviceId)!;
-  const ready = Boolean(serviceId && day && time && form.name.trim() && form.phone.trim());
+
+  // Multi-session packages (e.g. a 6-session block) book several time slots.
+  const sessionsNeeded = service.sessions ?? 1;
+  const multi = sessionsNeeded > 1;
+  const [slots, setSlots] = useState<{ day: string; time: string }[]>([]);
+
+  const ready = Boolean(
+    serviceId &&
+      (multi ? slots.length === sessionsNeeded : day && time) &&
+      form.name.trim() &&
+      form.phone.trim()
+  );
 
   const dayLabel = useMemo(() => {
     const d = days.find((x) => x.iso === day);
     return d ? `${d.weekday} ${d.date}` : "";
   }, [days, day]);
 
+  const labelFor = (iso: string) => {
+    const d = days.find((x) => x.iso === iso);
+    return d ? `${d.weekday} ${d.date}` : iso;
+  };
+
   async function submit() {
     setError(null);
     setBusy(true);
     try {
-      const res = await fetch("/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          vertical: config.slug,
-          serviceId,
-          staff: staff || undefined,
-          day,
-          time,
-          customer: form,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error || "Something went wrong. Please try again.");
-        setBusy(false);
-        return;
+      // Multi-session packages create one booking per chosen slot; single
+      // services book the one selected day/time.
+      const toBook = multi ? slots : [{ day, time }];
+      let firstId = "";
+      for (let i = 0; i < toBook.length; i++) {
+        const res = await fetch("/api/bookings", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            vertical: config.slug,
+            serviceId,
+            staff: staff || undefined,
+            day: toBook[i].day,
+            time: toBook[i].time,
+            customer: multi
+              ? { ...form, notes: `${form.notes ? form.notes + " · " : ""}Session ${i + 1} of ${sessionsNeeded} (${service.name})` }
+              : form,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || "Something went wrong. Please try again.");
+          setBusy(false);
+          return;
+        }
+        if (!firstId) firstId = data.booking.id;
       }
-      setDone({ id: data.booking.id });
+      setDone({ id: firstId });
     } catch {
       setError("Network error. Please try again.");
     }
@@ -101,13 +126,21 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
             You&apos;re booked in, {form.name.split(" ")[0]}.
           </h1>
           <p className="mt-3 text-ink-soft">
-            Reference <span className="font-mono font-semibold text-ink">{done.id}</span> —
-            {" "}{service.name} on {dayLabel} at {time}
+            Reference <span className="font-mono font-semibold text-ink">{done.id}</span> —{" "}
+            {multi
+              ? `${service.name}, all ${sessionsNeeded} sessions booked`
+              : `${service.name} on ${dayLabel} at ${time}`}
             {staff ? `, with ${staff}` : ""}.
           </p>
           <div className="mt-6 rounded-lg bg-paper p-4 text-left text-sm">
             <Row k={config.bookVerb.replace(/^Book a?n? /i, "")} v={service.name} />
-            <Row k="When" v={`${dayLabel} · ${time}`} />
+            {multi ? (
+              slots.map((s, i) => (
+                <Row key={s.day + s.time} k={`Session ${i + 1}`} v={`${labelFor(s.day)} · ${s.time}`} />
+              ))
+            ) : (
+              <Row k="When" v={`${dayLabel} · ${time}`} />
+            )}
             {staff && <Row k={config.staffLabel} v={staff} />}
             <Row k="Price" v={money(service.price)} />
           </div>
@@ -116,7 +149,7 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
             landed on the owner&apos;s live dashboard in real time.
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
-            <button onClick={() => { setDone(null); setTime(""); }} className="btn-outline">
+            <button onClick={() => { setDone(null); setTime(""); setSlots([]); }} className="btn-outline">
               Book another
             </button>
             <Link href={`/${config.slug}/demo/dashboard`} className="btn-primary">
@@ -152,7 +185,7 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
               {config.services.map((s) => (
                 <button
                   key={s.id}
-                  onClick={() => setServiceId(s.id)}
+                  onClick={() => { setServiceId(s.id); setSlots([]); setTime(""); }}
                   className={`rounded-lg border-2 p-4 text-left transition ${
                     serviceId === s.id ? "border-stamp bg-stamp/5" : "border-ink/10 hover:border-ink/25"
                   }`}
@@ -199,20 +232,59 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
             </div>
           </Step>
 
-          <Step n={config.staff.length > 1 ? 4 : 3} title="Pick a time">
+          <Step n={config.staff.length > 1 ? 4 : 3} title={multi ? `Pick your ${sessionsNeeded} session times` : "Pick a time"}>
+            {multi && (
+              <p className="-mt-1 mb-3 text-sm text-ink-soft">
+                This package is {sessionsNeeded} separate sessions — pick a time for each one
+                (switch days above to spread them across the week).
+              </p>
+            )}
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-              {config.slots.map((t) => (
-                <button
-                  key={t}
-                  onClick={() => setTime(t)}
-                  className={`tnum rounded-lg border-2 py-2.5 font-mono text-sm font-semibold transition ${
-                    time === t ? "border-stamp bg-stamp text-paper" : "border-ink/10 text-ink hover:border-ink/25"
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
+              {config.slots.map((t) => {
+                const picked = multi ? slots.some((s) => s.day === day && s.time === t) : time === t;
+                return (
+                  <button
+                    key={t}
+                    onClick={() => {
+                      if (!multi) { setTime(t); return; }
+                      setSlots((prev) => {
+                        const i = prev.findIndex((s) => s.day === day && s.time === t);
+                        if (i >= 0) return prev.filter((_, j) => j !== i);
+                        if (prev.length >= sessionsNeeded) return prev;
+                        return [...prev, { day, time: t }];
+                      });
+                    }}
+                    className={`tnum rounded-lg border-2 py-2.5 font-mono text-sm font-semibold transition ${
+                      picked ? "border-stamp bg-stamp text-paper" : "border-ink/10 text-ink hover:border-ink/25"
+                    }`}
+                  >
+                    {t}
+                  </button>
+                );
+              })}
             </div>
+            {multi && (
+              <div className="mt-4">
+                <p className="text-sm font-semibold text-ink">
+                  {slots.length} of {sessionsNeeded} sessions picked
+                  {slots.length === sessionsNeeded ? " ✓" : ""}
+                </p>
+                {slots.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {slots.map((s) => (
+                      <button
+                        key={s.day + s.time}
+                        onClick={() => setSlots((p) => p.filter((x) => !(x.day === s.day && x.time === s.time)))}
+                        className="rounded-full bg-stamp/10 px-3 py-1 font-mono text-xs font-semibold text-stamp hover:bg-stamp/20"
+                        title="Remove this session"
+                      >
+                        {labelFor(s.day)} · {s.time} ✕
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </Step>
 
           <Step n={config.staff.length > 1 ? 5 : 4} title="Your details">
@@ -231,7 +303,18 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
             <p className="mono-label text-ink-soft">Your {config.bookedNoun}</p>
             <div className="mt-3 space-y-2 text-sm">
               <Row k="Service" v={service.name} />
-              <Row k="When" v={day && time ? `${dayLabel} · ${time}` : "Not chosen yet"} />
+              <Row
+                k="When"
+                v={
+                  multi
+                    ? slots.length
+                      ? `${slots.length} of ${sessionsNeeded} sessions picked`
+                      : "Not chosen yet"
+                    : day && time
+                      ? `${dayLabel} · ${time}`
+                      : "Not chosen yet"
+                }
+              />
               {config.staff.length > 1 && <Row k={config.staffLabel} v={staff || "Any"} />}
             </div>
             <div className="my-4 rule-dashed" />
@@ -241,7 +324,7 @@ export default function BookingDemo({ config }: { config: BookingConfig }) {
             </div>
             {error && <p className="mt-3 rounded-md bg-stamp/10 px-3 py-2 text-sm text-stamp">{error}</p>}
             <button onClick={submit} disabled={!ready || busy} className="btn-primary mt-4 w-full">
-              {busy ? "Confirming…" : `Confirm ${config.bookedNoun}`}
+              {busy ? "Confirming…" : multi ? `Confirm all ${sessionsNeeded} sessions` : `Confirm ${config.bookedNoun}`}
             </button>
             <p className="mt-2 text-center text-xs text-ink-soft">
               No payment needed to hold your spot in this demo.
