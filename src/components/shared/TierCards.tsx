@@ -48,12 +48,14 @@ export default function TierCards() {
               ))}
             </ul>
 
-            <Link
-              href={`/get-started?tier=${t.id}`}
-              className={`mt-6 ${t.highlight ? "btn-gold" : "btn-outline"} w-full`}
-            >
-              {t.cta}
-            </Link>
+            <div className="mt-auto pt-6">
+              <Link
+                href={`/get-started?tier=${t.id}`}
+                className={`${t.highlight ? "btn-gold" : "btn-outline"} w-full`}
+              >
+                {t.cta}
+              </Link>
+            </div>
           </div>
         ))}
       </div>

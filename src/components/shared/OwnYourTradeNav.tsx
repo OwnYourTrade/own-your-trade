@@ -89,6 +89,7 @@ export default function OwnYourTradeNav({ heroTone = "light" }: { heroTone?: "li
           </Dropdown>
 
           <Link href="/#pricing" className={`px-3 py-2 text-sm font-medium transition-colors ${linkColor}`}>Pricing</Link>
+          <Link href="/contact" className={`px-3 py-2 text-sm font-medium transition-colors ${linkColor}`}>Contact</Link>
         </nav>
 
         <div className="hidden items-center gap-4 md:flex">
@@ -123,6 +124,7 @@ export default function OwnYourTradeNav({ heroTone = "light" }: { heroTone?: "li
             {productLinks.map((l) => (
               <Link key={l.href} href={l.href} className="border-b border-ink/5 py-2.5 text-ink">{l.label}</Link>
             ))}
+            <Link href="/contact" className="border-b border-ink/5 py-2.5 font-semibold text-ink">Contact</Link>
             <div className="mt-4 flex items-center gap-3">
               <Link href="/login" className="btn-outline flex-1">Login</Link>
               <Link href="/get-started" className="btn-gold flex-1">Get started</Link>
