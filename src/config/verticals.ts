@@ -79,31 +79,31 @@ export const verticals: Vertical[] = [
         feature: "On a £22 order",
         category: "cost",
         oyt: "You keep all £22",
-        rivals: { "Just Eat": "Up to £6.60 taken (14–30%)", Deliveroo: "Up to £7.70 taken (25–35%)", Flipdish: "No commission, but SaaS fees on contract" },
+        rivals: { "Just Eat": "Up to £6.60 taken (14–30%)", Deliveroo: "Up to £7.70 taken (25–35%)", Flipdish: "A per-order fee through their payments, on top of the plan" },
       },
       {
         feature: "Commission per order",
         category: "cost",
         oyt: "None — flat monthly fee",
-        rivals: { "Just Eat": "14–30%", Deliveroo: "25–35%", Flipdish: "None on paper" },
+        rivals: { "Just Eat": "14–30%", Deliveroo: "25–35%", Flipdish: "\"None\" — but every order carries a Flipdish Pay fee" },
       },
       {
         feature: "Ongoing cost & contract",
         category: "cost",
-        oyt: "One flat fee, no contract",
-        rivals: { "Just Eat": "A cut of everything", Deliveroo: "A cut of everything", Flipdish: "Tiered SaaS + add-ons, on contract" },
+        oyt: "From £29 a month, no contract",
+        rivals: { "Just Eat": "A cut of everything", Deliveroo: "A cut of everything", Flipdish: "£69–£139+ a month on contract — often the priciest option overall" },
       },
       {
         feature: "Card / service fees",
         category: "cost",
         oyt: "Standard Stripe fee only",
-        rivals: { "Just Eat": "Added on top", Deliveroo: "Added on top", Flipdish: "Their processor rates" },
+        rivals: { "Just Eat": "Added on top", Deliveroo: "Added on top", Flipdish: "Quote-based rates via their own processor" },
       },
       {
         feature: "Setup & lock-in",
         category: "control",
         oyt: "Set up for you in under 2 weeks",
-        rivals: { "Just Eat": "Their platform, their rules", Deliveroo: "Their platform, their rules", Flipdish: "Onboarding + platform lock-in" },
+        rivals: { "Just Eat": "Their platform, their rules", Deliveroo: "Their platform, their rules", Flipdish: "Setup & hardware fees, then platform lock-in" },
       },
       {
         feature: "Live kitchen dashboard",
@@ -223,13 +223,13 @@ export const verticals: Vertical[] = [
         feature: "On a £20 new-client booking",
         category: "cost",
         oyt: "You keep all £20",
-        rivals: { Fresha: "Around £4 taken (~20%)", Treatwell: "Commission taken, plus subscription" },
+        rivals: { Fresha: "£6 taken (20% fee, £6 minimum)", Treatwell: "£7 taken (35% fee — c. 42% once VAT is added)" },
       },
       {
         feature: "New-client booking fee",
         category: "cost",
         oyt: "None",
-        rivals: { Fresha: "~20% on new clients", Treatwell: "Commission on new clients" },
+        rivals: { Fresha: "20%, minimum £6 a head", Treatwell: "35% — and charged even if you cancel the appointment" },
       },
       {
         feature: "Card processing",
@@ -292,13 +292,13 @@ export const verticals: Vertical[] = [
         feature: "On a £30 lesson",
         category: "cost",
         oyt: "You keep all £30",
-        rivals: { Tutorful: "Around £6 taken (roughly a fifth)", MyTutor: "A cut of every £30" },
+        rivals: { Tutorful: "The family pays ~£40 for your £30 — a ~35% fee sits on top", MyTutor: "~40% + VAT taken — you keep barely half" },
       },
       {
         feature: "Commission per lesson",
         category: "cost",
         oyt: "None — flat monthly fee",
-        rivals: { Tutorful: "Fee on every lesson", MyTutor: "Cut of every lesson" },
+        rivals: { Tutorful: "~35% service fee on every lesson", MyTutor: "~40% + VAT, every lesson" },
       },
       {
         feature: "Repeat lessons, same pupil",
@@ -327,7 +327,7 @@ export const verticals: Vertical[] = [
     ],
     saved: {
       headline: "about £2,000 a year",
-      basis: "28 lessons a month at £30, with roughly a fifth taken on each, is over £180 a month — for as long as those pupils stay.",
+      basis: "28 lessons a month at £30: MyTutor's ~40% cut would be over £330 a month, so £2,000 a year is a conservative figure — and it applies for as long as those pupils stay.",
     },
     calc: {
       unitNoun: "lessons",

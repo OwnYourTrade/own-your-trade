@@ -33,7 +33,7 @@ export const site = {
   // -------------------------------------------------------------------------
   currency: "£",
   pricing: {
-    note: "One flat monthly fee. No commission, ever. A branded site on your own domain is included from Growth up — Starter is the system only, on a subdomain. We don't sell a website without the system.",
+    note: "One flat monthly fee. No commission, ever. A branded site on your own domain is included from Growth up — Starter is the system only, on a subdomain. We don't sell a website without the system. Bigger design or layout changes are easy too — arranged as a simple one-off whenever you want one.",
     tiers: [
       {
         id: "starter",
@@ -67,25 +67,24 @@ export const site = {
           "Your own branded version of a proven system",
           "Your own domain name, set up for you",
           "Built for your trade specifically — live in under 2 weeks",
-          "Menu / services / prices updated whenever you need",
+          "Keep your menu, services, prices, hours and photos fresh — unlimited content updates, included",
         ],
         notIncluded: [],
       },
       {
         id: "established",
         name: "Established",
-        blurb: "Growth, plus priority support and ongoing updates to keep your pages fresh.",
+        blurb: "Growth, plus an ongoing design partner — quarterly improvements, honest reviews, same-day support.",
         setup: 149,
-        monthly: 89,
+        monthly: 69,
         domain: "yourbusiness.co.uk",
         cta: "Talk about Established",
         highlight: false,
         features: [
           "Everything in Growth, plus:",
+          "A small design tweak on us, every quarter — a layout change, photo refresh or minor new feature",
+          "A quarterly design & performance review — real analytics on how the site's doing, what it's winning you, and 2–3 specific next steps",
           "Priority support — a real person, same day",
-          "Ongoing marketing-page updates (offers, seasons, news)",
-          "Quarterly review of what's converting",
-          "First in the queue for new features",
         ],
         notIncluded: [],
       },
