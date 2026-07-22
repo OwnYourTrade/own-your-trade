@@ -57,7 +57,7 @@ export default function CartDrawer() {
             <p className="text-sm text-ink-soft">
               Add some dishes from the menu to get started.
             </p>
-            <Link href="/order" onClick={closeCart} className="btn-primary mt-2">
+            <Link href="/takeaway/demo/order" onClick={closeCart} className="btn-primary mt-2">
               Start your order
             </Link>
           </div>
@@ -110,7 +110,7 @@ export default function CartDrawer() {
                 Delivery & fees calculated at checkout.
               </p>
               <Link
-                href="/order"
+                href="/takeaway/demo/order"
                 onClick={closeCart}
                 className="btn-primary mt-4 w-full"
               >

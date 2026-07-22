@@ -123,7 +123,7 @@ export default function VerticalPitch({ v }: { v: Vertical }) {
             <div className="max-w-2xl">
               <p className="eyebrow">Straight comparison</p>
               <h2 className="mt-3 font-craft text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
-                {v.trade} vs {v.competitors.join(" vs ")}
+                Own Your Trade vs {v.competitors.join(" vs ")}
               </h2>
               <p className="mt-3 text-ink-soft">
                 No spin. Filter by what matters to you, and see where the money goes.
