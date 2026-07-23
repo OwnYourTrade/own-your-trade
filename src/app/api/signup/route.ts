@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { getStripe, stripeConfigured } from "@/lib/stripe";
+import { getStripe, anyStripeConfigured, signupMode } from "@/lib/stripe";
 import { createSignup, updateSignup, listSignups } from "@/lib/signups";
 import { isAdmin } from "@/lib/auth";
 import { site } from "@/config/site";
@@ -86,8 +86,8 @@ export async function POST(req: Request) {
 
   const origin = originFrom(req);
 
-  // ---- Demo mode (no Stripe keys) ---------------------------------------
-  if (!stripeConfigured) {
+  // ---- Demo mode (no Stripe keys at all) --------------------------------
+  if (!anyStripeConfigured) {
     const signup = await createSignup({
       ...base,
       payment: { status: "demo", method: "demo", amount: firstAmount },
@@ -98,17 +98,19 @@ export async function POST(req: Request) {
     });
   }
 
-  // ---- Real Stripe test-mode Checkout: recurring subscription -----------
+  // ---- Real Stripe Checkout: recurring subscription ----------------------
+  // LIVE mode in production (STRIPE_LIVE_SECRET_KEY set), test mode elsewhere.
   // The monthly fee is a genuine recurring price (charged automatically every
   // month until cancelled); any one-off setup fee is added to the first
   // invoice only. Cancellation is self-serve via the Stripe Billing Portal.
   const signup = await createSignup({
     ...base,
+    stripeMode: signupMode,
     payment: { status: "unpaid", method: "stripe", amount: firstAmount },
   });
 
   try {
-    const stripe = getStripe()!;
+    const stripe = getStripe(signupMode)!;
 
     const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
     if (tier.setup > 0) {

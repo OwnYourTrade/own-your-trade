@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAdmin } from "@/lib/auth";
-import { getSignup } from "@/lib/signups";
-import { stripeConfigured, createBillingPortalSession } from "@/lib/stripe";
+import { getSignup, signupStripeMode } from "@/lib/signups";
+import { anyStripeConfigured, createBillingPortalSession } from "@/lib/stripe";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   if (!isAdmin()) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (!stripeConfigured) {
+  if (!anyStripeConfigured) {
     return NextResponse.json({ error: "Billing is not enabled." }, { status: 503 });
   }
 
@@ -36,7 +36,11 @@ export async function POST(req: Request) {
   const host = req.headers.get("host") ?? "localhost:3000";
   const proto = host.startsWith("localhost") ? "http" : "https";
   try {
-    const portal = await createBillingPortalSession(signup.stripeCustomerId, `${proto}://${host}/admin`);
+    const portal = await createBillingPortalSession(
+      signup.stripeCustomerId,
+      `${proto}://${host}/admin`,
+      signupStripeMode(signup)
+    );
     return NextResponse.json({ url: portal.url });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Could not open the billing portal.";

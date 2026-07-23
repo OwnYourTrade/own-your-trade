@@ -1,42 +1,60 @@
 import Stripe from "stripe";
 
-// Stripe runs in TEST mode. Provide keys via .env.local:
-//   STRIPE_SECRET_KEY=sk_test_...
-//   NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
+// ---------------------------------------------------------------------------
+// Dual-mode Stripe.
 //
-// If no secret key is present, the app falls back to a clearly-labelled
-// "demo" checkout so the full ordering flow can still be exercised without
-// any Stripe account. With keys present, real Stripe test-mode Checkout is used.
+//   STRIPE_SECRET_KEY        sk_test_...  — test mode (local dev, previews,
+//                                           and all signups created before
+//                                           live keys existed)
+//   STRIPE_LIVE_SECRET_KEY   sk_live_...  — LIVE mode, set only on the Vercel
+//                                           production environment
+//
+// New signups use live mode whenever live keys are configured (production);
+// everywhere else they fall back to test mode. Each signup records which mode
+// created it (Signup.stripeMode), and every later Stripe call for that signup
+// (success-page verification, billing portal) must use the same mode.
+// The demo checkouts do not use Stripe at all.
+// ---------------------------------------------------------------------------
 
-const secret = process.env.STRIPE_SECRET_KEY;
+export type StripeMode = "test" | "live";
 
-export const stripeConfigured = Boolean(secret && secret.startsWith("sk_"));
+const testSecret = process.env.STRIPE_SECRET_KEY;
+const liveSecret = process.env.STRIPE_LIVE_SECRET_KEY;
 
-let cached: Stripe | null = null;
+/** True when test-mode Stripe is available (legacy name, kept for callers). */
+export const stripeConfigured = Boolean(testSecret && testSecret.startsWith("sk_"));
+/** True when LIVE Stripe is available (production only). */
+export const liveStripeConfigured = Boolean(liveSecret && liveSecret.startsWith("sk_live_"));
+/** True when any Stripe mode is available. */
+export const anyStripeConfigured = stripeConfigured || liveStripeConfigured;
 
-export function getStripe(): Stripe | null {
-  if (!stripeConfigured) return null;
-  if (!cached) {
-    cached = new Stripe(secret as string, {
-      apiVersion: "2024-06-20",
-    });
-  }
-  return cached;
+/** The mode NEW signups are created in: live wherever live keys are set. */
+export const signupMode: StripeMode = liveStripeConfigured ? "live" : "test";
+
+const cache: Partial<Record<StripeMode, Stripe>> = {};
+
+export function getStripe(mode: StripeMode = "test"): Stripe | null {
+  const key = mode === "live" ? liveSecret : testSecret;
+  if (!key || !key.startsWith("sk_")) return null;
+  if (mode === "live" && !key.startsWith("sk_live_")) return null; // never allow a non-live key in the live slot
+  if (!cache[mode]) cache[mode] = new Stripe(key, { apiVersion: "2024-06-20" });
+  return cache[mode]!;
 }
 
 /**
  * Create a Stripe Customer Billing Portal session for a customer — the
  * self-serve place to update card details and cancel the subscription.
- * A fresh (test) account has no default portal configuration, so on that
- * specific failure we create a sensible one (invoices, card update, cancel
- * at period end) and retry once.
+ * A fresh account has no default portal configuration, so on that specific
+ * failure we create a sensible one (invoices, card update, cancel at period
+ * end) and retry once. `mode` must match the mode the customer was created in.
  */
 export async function createBillingPortalSession(
   customerId: string,
-  returnUrl: string
+  returnUrl: string,
+  mode: StripeMode = "test"
 ): Promise<{ url: string }> {
-  const stripe = getStripe();
-  if (!stripe) throw new Error("Stripe is not configured");
+  const stripe = getStripe(mode);
+  if (!stripe) throw new Error(`Stripe (${mode}) is not configured`);
   try {
     const session = await stripe.billingPortal.sessions.create({
       customer: customerId,

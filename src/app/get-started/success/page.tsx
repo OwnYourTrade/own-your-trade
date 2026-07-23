@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HubShell from "@/components/shared/HubShell";
-import { getSignup, markPaidBySession, markNotified, updateSignup, type Signup } from "@/lib/signups";
-import { getStripe, stripeConfigured } from "@/lib/stripe";
+import { getSignup, markPaidBySession, markNotified, updateSignup, signupStripeMode, type Signup } from "@/lib/signups";
+import { getStripe } from "@/lib/stripe";
 import { sendSignupNotifications } from "@/lib/email";
 import { site } from "@/config/site";
 import ManageBillingButton from "@/components/shared/ManageBillingButton";
@@ -21,9 +21,12 @@ export default async function SignupSuccessPage({
   let signup: Signup | undefined = id ? await getSignup(id) : undefined;
   let paid = isDemo;
 
-  if (signup && sessionId && stripeConfigured) {
+  // Verify the checkout session in the SAME Stripe mode the signup was created
+  // in (live for production signups, test for legacy/dev ones).
+  const stripeForSignup = signup ? getStripe(signupStripeMode(signup)) : null;
+  if (signup && sessionId && stripeForSignup) {
     try {
-      const session = await getStripe()!.checkout.sessions.retrieve(sessionId);
+      const session = await stripeForSignup.checkout.sessions.retrieve(sessionId);
       if (session.payment_status === "paid") {
         await markPaidBySession(sessionId);
         // Record the recurring-billing identifiers (webhook also does this;

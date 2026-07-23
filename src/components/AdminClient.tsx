@@ -178,6 +178,9 @@ export default function AdminClient({
                             <span className="stamp-badge">{s.trade}</span>
                             <span className="rounded-full bg-ink px-2.5 py-0.5 text-[11px] font-bold text-paper">{tier?.name ?? s.tier}</span>
                             <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${pm.badge}`}>{pm.label}</span>
+                            {s.payment.method === "stripe" && s.stripeMode !== "live" && (
+                              <span className="rounded-full bg-ink/10 px-2.5 py-0.5 text-[11px] font-bold text-ink-soft" title="Created with Stripe test keys — not real money">Stripe test</span>
+                            )}
                             {sub && (
                               <span className={`rounded-full px-2.5 py-0.5 text-[11px] font-bold ${sub.badge}`}>{sub.label}</span>
                             )}

@@ -8,7 +8,7 @@ import Honeypot from "./Honeypot";
 
 const cur = site.currency;
 
-export default function SignupForm() {
+export default function SignupForm({ liveMode = false }: { liveMode?: boolean }) {
   const [trade, setTrade] = useState<string>("");
   const [tierId, setTierId] = useState<string>("growth");
   const [canceled, setCanceled] = useState(false);
@@ -177,7 +177,7 @@ export default function SignupForm() {
             {busy ? "Starting…" : `Continue — ${cur}${tier.setup + tier.monthly} today`}
           </button>
           <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-ink-soft">
-            <LockIcon /> Secure payment via Stripe (test mode)
+            <LockIcon /> Secure payment via Stripe{liveMode ? "" : " (test mode)"}
           </p>
         </div>
       </div>

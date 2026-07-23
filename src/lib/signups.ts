@@ -30,6 +30,12 @@ export type Signup = {
   notifiedAt?: string; // set once the confirmation + owner-alert emails have been sent
 
   // --- Recurring billing (Stripe subscription) -----------------------------
+  /**
+   * Which Stripe mode this signup's customer/subscription live in.
+   * Signups created before live keys existed have no value = "test".
+   * Every Stripe call for this signup must use the same mode.
+   */
+  stripeMode?: "test" | "live";
   stripeCustomerId?: string;
   stripeSubscriptionId?: string;
   /** Stripe subscription status: active | past_due | canceled | ... */
@@ -39,6 +45,11 @@ export type Signup = {
   /** ISO date the current paid period runs to (= next charge date while active). */
   currentPeriodEnd?: string;
 };
+
+/** The Stripe mode a signup's records live in (legacy rows default to test). */
+export function signupStripeMode(s: Pick<Signup, "stripeMode">): "test" | "live" {
+  return s.stripeMode === "live" ? "live" : "test";
+}
 
 const COLLECTION = "signups";
 const readAll = () => readList<Signup>(COLLECTION);

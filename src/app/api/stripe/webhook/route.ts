@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { getStripe, stripeConfigured } from "@/lib/stripe";
+import { getStripe, anyStripeConfigured } from "@/lib/stripe";
 import {
   getSignup,
   getSignupBySession,
@@ -23,8 +23,15 @@ export const dynamic = "force-dynamic";
 //   invoice.payment_failed       -> past_due
 //   customer.subscription.updated-> status / cancel_at_period_end / period end
 //   customer.subscription.deleted-> canceled
-// Signature-verified with STRIPE_WEBHOOK_SECRET. Returns 200 for events we
-// don't handle; 500 on handler errors so Stripe retries.
+// One endpoint serves BOTH Stripe modes. Each mode has its own registered
+// webhook + signing secret:
+//   STRIPE_WEBHOOK_SECRET       — test-mode events
+//   STRIPE_WEBHOOK_SECRET_LIVE  — live-mode events
+// We peek at the (unverified) payload's `livemode` flag only to choose which
+// secret to verify against; trust still comes exclusively from the signature
+// check — a forged flag simply selects a secret the signature can't satisfy.
+// Returns 200 for events we don't handle; 500 on handler errors so Stripe
+// retries.
 // ---------------------------------------------------------------------------
 
 const asId = (v: string | { id: string } | null | undefined): string | undefined =>
@@ -74,8 +81,7 @@ async function applySubscriptionState(sub: Stripe.Subscription, forceStatus?: st
 }
 
 export async function POST(req: Request) {
-  const secret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!stripeConfigured || !secret) {
+  if (!anyStripeConfigured) {
     return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
   }
   const signature = req.headers.get("stripe-signature");
@@ -83,8 +89,25 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Missing signature" }, { status: 400 });
   }
 
-  const stripe = getStripe()!;
   const body = await req.text();
+
+  // Choose the signing secret by the payload's livemode flag (see note above —
+  // this only SELECTS the secret; the signature check below is what we trust).
+  let claimsLive = false;
+  try {
+    claimsLive = Boolean((JSON.parse(body) as { livemode?: unknown }).livemode);
+  } catch {
+    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+  }
+  const secret = claimsLive
+    ? process.env.STRIPE_WEBHOOK_SECRET_LIVE
+    : process.env.STRIPE_WEBHOOK_SECRET;
+  if (!secret) {
+    return NextResponse.json({ error: "Webhook not configured" }, { status: 503 });
+  }
+
+  // constructEvent only uses the signing secret — any configured client works.
+  const stripe = getStripe(claimsLive ? "live" : "test") ?? getStripe(claimsLive ? "test" : "live")!;
 
   let event: Stripe.Event;
   try {

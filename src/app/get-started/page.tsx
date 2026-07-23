@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import HubShell from "@/components/shared/HubShell";
 import SignupForm from "@/components/shared/SignupForm";
+import { liveStripeConfigured } from "@/lib/stripe";
 import Reveal from "@/components/shared/Reveal";
 
 export const metadata: Metadata = {
@@ -29,7 +30,7 @@ export default function GetStartedPage() {
           </Reveal>
 
           <div className="mt-12">
-            <SignupForm />
+            <SignupForm liveMode={liveStripeConfigured} />
           </div>
         </div>
       </section>
