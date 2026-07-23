@@ -28,7 +28,12 @@ const kvKey = (name: string) => `oyt:${name}`;
 
 let client: VercelKV | null = null;
 function kv(): VercelKV {
-  if (!client) client = createClient({ url: KV_URL as string, token: KV_TOKEN as string });
+  // cache: "no-store" is critical — @vercel/kv uses fetch() internally, and in
+  // a server component Next's data cache would otherwise cache the FIRST read
+  // of a list forever (until the next deploy). That made order/signup
+  // confirmation pages render "not found" for records created after the cache
+  // was primed, while API routes (uncached) saw fresh data.
+  if (!client) client = createClient({ url: KV_URL as string, token: KV_TOKEN as string, cache: "no-store" });
   return client;
 }
 
